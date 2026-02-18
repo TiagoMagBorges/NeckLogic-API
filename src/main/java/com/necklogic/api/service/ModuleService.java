@@ -1,5 +1,6 @@
 package com.necklogic.api.service;
 
+import com.necklogic.api.dto.LessonContentDTO;
 import com.necklogic.api.dto.ModuleResponseDTO;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.User;
@@ -29,14 +30,11 @@ public class ModuleService {
 
     public List<ModuleResponseDTO> getUserPath(String userEmail) {
         User user = (User) userRepository.findByEmail(userEmail);
-
         List<Module> allModules = moduleRepository.findAll();
-
         List<ModuleResponseDTO> response = new ArrayList<>();
 
         for (Module module : allModules) {
             Optional<UserProgress> progress = progressRepository.findByUserAndModuleId(user, module.getId());
-
             ModuleStatus status;
             Integer percentage = 0;
 
@@ -44,21 +42,32 @@ public class ModuleService {
                 status = progress.get().getStatus();
                 percentage = progress.get().getPercentage();
             } else {
-                if (module.getOrderIndex() == 1)
-                    status = ModuleStatus.CURRENT;
-                else
-                    status = ModuleStatus.LOCKED;
+                status = (module.getOrderIndex() == 1) ? ModuleStatus.CURRENT : ModuleStatus.LOCKED;
             }
+            String secTitle = (module.getSection() != null) ? module.getSection().getTitle() : "General";
+            String secDesc = (module.getSection() != null) ? module.getSection().getDescription() : "";
 
             response.add(new ModuleResponseDTO(
                 module.getId(),
                 module.getTitle(),
                 module.getOrderIndex(),
                 status,
-                percentage
+                percentage,
+                secTitle,
+                secDesc
             ));
         }
-
         return response;
+    }
+
+    public LessonContentDTO getLessonContent(Long moduleId) {
+        Module module = moduleRepository.findById(moduleId)
+            .orElseThrow(() -> new RuntimeException("Módulo não encontrado"));
+
+        return new LessonContentDTO(
+            module.getId(),
+            module.getTitle(),
+            module.getContent()
+        );
     }
 }
