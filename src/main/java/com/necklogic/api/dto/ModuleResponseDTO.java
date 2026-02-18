@@ -7,5 +7,7 @@ public record ModuleResponseDTO(
     String title,
     Integer orderIndex,
     ModuleStatus status,
-    Integer percentage
+    Integer percentage,
+    String sectionTitle,
+    String sectionDescription
 ) {}
