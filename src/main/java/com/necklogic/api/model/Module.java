@@ -32,7 +32,6 @@ public class Module {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    // Construtor auxiliar atualizado
     public Module(String title, Integer orderIndex, Section section, String content) {
         this.title = title;
         this.orderIndex = orderIndex;

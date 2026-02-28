@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "users")
 @Entity(name = "User")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -28,10 +29,14 @@ public class User implements UserDetails {
 
     private String name;
 
+    @Column(name = "onboarding_completed", nullable = false)
+    private boolean onboardingCompleted = false;
+
     public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.onboardingCompleted = false;
     }
 
     @Override
