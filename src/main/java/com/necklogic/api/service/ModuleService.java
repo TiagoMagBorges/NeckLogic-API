@@ -1,6 +1,7 @@
 package com.necklogic.api.service;
 
 import com.necklogic.api.dto.LessonContentDTO;
+import com.necklogic.api.dto.ModuleCompletionResponseDTO;
 import com.necklogic.api.dto.ModuleResponseDTO;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.User;
@@ -51,14 +52,14 @@ public class ModuleService {
             String secDesc = (module.getSection() != null) ? module.getSection().getDescription() : "";
 
             response.add(new ModuleResponseDTO(
-                module.getId(),
-                module.getTitle(),
-                module.getOrderIndex(),
-                status,
-                percentage,
-                secId,
-                secTitle,
-                secDesc
+                    module.getId(),
+                    module.getTitle(),
+                    module.getOrderIndex(),
+                    status,
+                    percentage,
+                    secId,
+                    secTitle,
+                    secDesc
             ));
         }
         return response;
@@ -66,17 +67,17 @@ public class ModuleService {
 
     public LessonContentDTO getLessonContent(Long moduleId) {
         Module module = moduleRepository.findById(moduleId)
-            .orElseThrow(() -> new RuntimeException("Módulo não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Módulo não encontrado"));
 
         return new LessonContentDTO(
-            module.getId(),
-            module.getTitle(),
-            module.getContent()
+                module.getId(),
+                module.getTitle(),
+                module.getContent()
         );
     }
 
     @Transactional
-    public void completeModule(Long moduleId, User user) {
+    public ModuleCompletionResponseDTO completeModule(Long moduleId, User user, Integer mistakesCount) {
         UserProgress currentProgress = progressRepository.findByUserAndModuleId(user, moduleId)
                 .orElseGet(() -> {
                     UserProgress newProgress = new UserProgress();
@@ -86,11 +87,31 @@ public class ModuleService {
                     return newProgress;
                 });
 
-        currentProgress.setStatus(ModuleStatus.COMPLETED);
-        currentProgress.setPercentage(100);
-        progressRepository.save(currentProgress);
-
+        boolean isAlreadyCompleted = currentProgress.getStatus() == ModuleStatus.COMPLETED;
         Module currentModule = currentProgress.getModule();
+
+        int xpGained = 0;
+        boolean leveledUp = false;
+        int oldLevel = user.getLevel();
+
+        if (!isAlreadyCompleted) {
+            currentProgress.setStatus(ModuleStatus.COMPLETED);
+            currentProgress.setPercentage(100);
+            progressRepository.save(currentProgress);
+
+            int baseReward = currentModule.getXpReward() != null ? currentModule.getXpReward() : 50;
+            int penaltyPerMistake = 5;
+            int minReward = 10;
+
+            int safeMistakes = mistakesCount != null ? mistakesCount : 0;
+
+            xpGained = Math.max(baseReward - (safeMistakes * penaltyPerMistake), minReward);
+
+            user.addXp(xpGained);
+            userRepository.save(user);
+
+            leveledUp = user.getLevel() > oldLevel;
+        }
 
         moduleRepository.findBySectionAndOrderIndex(
                 currentModule.getSection(),
@@ -109,5 +130,13 @@ public class ModuleService {
                 progressRepository.save(nextProgress);
             }
         });
+
+        return new ModuleCompletionResponseDTO(
+                moduleId,
+                xpGained,
+                user.getXp(),
+                user.getLevel(),
+                leveledUp
+        );
     }
 }

@@ -32,10 +32,14 @@ public class Module {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "xp_reward", nullable = false)
+    private Integer xpReward = 50;
+
     public Module(String title, Integer orderIndex, Section section, String content) {
         this.title = title;
         this.orderIndex = orderIndex;
         this.section = section;
         this.content = content;
+        this.xpReward = 50;
     }
 }

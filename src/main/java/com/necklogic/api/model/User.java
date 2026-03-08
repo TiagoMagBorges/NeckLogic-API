@@ -32,11 +32,28 @@ public class User implements UserDetails {
     @Column(name = "onboarding_completed", nullable = false)
     private boolean onboardingCompleted = false;
 
+    @Column(nullable = false)
+    private Integer xp = 0;
+
+    @Column(name = "user_level", nullable = false)
+    private Integer level = 1;
+
     public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.onboardingCompleted = false;
+        this.xp = 0;
+        this.level = 1;
+    }
+
+    public void addXp(Integer gainedXp) {
+        this.xp += gainedXp;
+        this.level = calculateLevel(this.xp);
+    }
+
+    private Integer calculateLevel(Integer totalXp) {
+        return (int) (0.1 * Math.sqrt(totalXp)) + 1;
     }
 
     @Override
