@@ -39,7 +39,10 @@ public class AuthenticationController {
                 token,
                 user.isOnboardingCompleted(),
                 user.getXp(),
-                user.getLevel()
+                user.getLevel(),
+                user.getCurrentStreak(),
+                user.getName(),
+                user.getEmail()
         ));
     }
 

@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface UserProgressRepository extends JpaRepository<UserProgress, Long> {
     List<UserProgress> findByUser(User user);
-
     Optional<UserProgress> findByUserAndModuleId(User user, Long moduleId);
+    void deleteByUser(User user);
 }

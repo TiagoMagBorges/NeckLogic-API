@@ -4,6 +4,7 @@ public record ModuleCompletionResponseDTO(
     Long moduleId,
     Integer xpGained,
     Integer totalXp,
-    Integer currentLevel,
-    boolean leveledUp
+    Integer level,
+    Boolean leveledUp,
+    Integer streak
 ) {}
