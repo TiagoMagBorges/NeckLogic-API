@@ -3,6 +3,7 @@ package com.necklogic.api.service;
 import com.necklogic.api.dto.LessonContentDTO;
 import com.necklogic.api.dto.ModuleCompletionResponseDTO;
 import com.necklogic.api.dto.ModuleResponseDTO;
+import com.necklogic.api.exception.ResourceNotFoundException;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.User;
 import com.necklogic.api.model.UserProgress;
@@ -13,6 +14,7 @@ import com.necklogic.api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,14 +54,14 @@ public class ModuleService {
             String secDesc = (module.getSection() != null) ? module.getSection().getDescription() : "";
 
             response.add(new ModuleResponseDTO(
-                    module.getId(),
-                    module.getTitle(),
-                    module.getOrderIndex(),
-                    status,
-                    percentage,
-                    secId,
-                    secTitle,
-                    secDesc
+                module.getId(),
+                module.getTitle(),
+                module.getOrderIndex(),
+                status,
+                percentage,
+                secId,
+                secTitle,
+                secDesc
             ));
         }
         return response;
@@ -67,12 +69,12 @@ public class ModuleService {
 
     public LessonContentDTO getLessonContent(Long moduleId) {
         Module module = moduleRepository.findById(moduleId)
-                .orElseThrow(() -> new RuntimeException("Módulo não encontrado"));
+            .orElseThrow(() -> new ResourceNotFoundException("Módulo não encontrado com ID: " + moduleId));
 
         return new LessonContentDTO(
-                module.getId(),
-                module.getTitle(),
-                module.getContent()
+            module.getId(),
+            module.getTitle(),
+            module.getContent()
         );
     }
 
@@ -83,7 +85,7 @@ public class ModuleService {
                     UserProgress newProgress = new UserProgress();
                     newProgress.setUser(user);
                     newProgress.setModule(moduleRepository.findById(moduleId)
-                            .orElseThrow(() -> new RuntimeException("Módulo não encontrado")));
+                            .orElseThrow(() -> new ResourceNotFoundException("Módulo não encontrado com ID: " + moduleId)));
                     return newProgress;
                 });
 
@@ -106,6 +108,15 @@ public class ModuleService {
             int safeMistakes = mistakesCount != null ? mistakesCount : 0;
 
             xpGained = Math.max(baseReward - (safeMistakes * penaltyPerMistake), minReward);
+
+            LocalDate today = LocalDate.now();
+            if (user.getLastActivityDate() == null || user.getLastActivityDate().isBefore(today.minusDays(1))) {
+                user.setCurrentStreak(1);
+                user.setLastActivityDate(today);
+            } else if (user.getLastActivityDate().isEqual(today.minusDays(1))) {
+                user.setCurrentStreak(user.getCurrentStreak() + 1);
+                user.setLastActivityDate(today);
+            }
 
             user.addXp(xpGained);
             userRepository.save(user);
@@ -136,7 +147,8 @@ public class ModuleService {
                 xpGained,
                 user.getXp(),
                 user.getLevel(),
-                leveledUp
+                leveledUp,
+                user.getCurrentStreak()
         );
     }
 }

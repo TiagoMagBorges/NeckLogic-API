@@ -4,5 +4,8 @@ public record LoginResponseDTO(
     String token,
     boolean onboardingCompleted,
     Integer xp,
-    Integer level
+    Integer level,
+    Integer streak,
+    String name,
+    String email
 ) {}
