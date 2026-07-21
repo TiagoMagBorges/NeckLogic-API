@@ -45,6 +45,9 @@ public class User implements UserDetails {
     @Column(name = "current_streak", nullable = false)
     private Integer currentStreak = 0;
 
+    @Column(nullable = false)
+    private boolean enabled = false;
+
     public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
@@ -53,6 +56,7 @@ public class User implements UserDetails {
         this.xp = 0;
         this.level = 1;
         this.currentStreak = 0;
+        this.enabled = false;
     }
 
     public void addXp(Integer gainedXp) {
@@ -89,5 +93,5 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() { return enabled; }
 }
