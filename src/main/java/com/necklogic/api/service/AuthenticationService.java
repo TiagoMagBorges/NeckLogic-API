@@ -1,0 +1,169 @@
+package com.necklogic.api.service;
+
+import com.necklogic.api.dto.AuthenticationDTO;
+import com.necklogic.api.dto.LoginResponseDTO;
+import com.necklogic.api.dto.RegisterDTO;
+import com.necklogic.api.model.User;
+import com.necklogic.api.model.VerificationToken;
+import com.necklogic.api.model.enums.TokenType;
+import com.necklogic.api.repository.UserRepository;
+import com.necklogic.api.repository.VerificationTokenRepository;
+import com.necklogic.api.security.TokenService;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class AuthenticationService {
+
+    private final UserRepository userRepository;
+    private final VerificationTokenRepository tokenRepository;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
+    private final MessageSource messageSource;
+
+    public AuthenticationService(UserRepository userRepository,
+                                 VerificationTokenRepository tokenRepository,
+                                 EmailService emailService,
+                                 PasswordEncoder passwordEncoder,
+                                 AuthenticationManager authenticationManager,
+                                 TokenService tokenService,
+                                 MessageSource messageSource) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+        this.messageSource = messageSource;
+    }
+
+    @Transactional
+    public void registerUser(RegisterDTO data) {
+        User existingUser = userRepository.findByEmail(data.email());
+
+        if (existingUser != null) {
+            if (existingUser.isEnabled()) {
+                throw new IllegalStateException("Email already registered and verified");
+            } else {
+                existingUser.setName(data.name());
+                existingUser.setPassword(passwordEncoder.encode(data.password()));
+                userRepository.save(existingUser);
+                generateAndSendOtp(existingUser, TokenType.REGISTRATION);
+                return;
+            }
+        }
+
+        User user = new User(data.email(), passwordEncoder.encode(data.password()), data.name());
+        userRepository.save(user);
+
+        generateAndSendOtp(user, TokenType.REGISTRATION);
+    }
+
+    public LoginResponseDTO login(AuthenticationDTO data) {
+        User user = (User) userRepository.findByEmail(data.email());
+
+        if (user != null && !user.isEnabled()) {
+            throw new IllegalStateException("ACCOUNT_DISABLED");
+        }
+
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        var auth = authenticationManager.authenticate(usernamePassword);
+        User authenticatedUser = (User) auth.getPrincipal();
+        var token = tokenService.generateToken(authenticatedUser);
+
+        return new LoginResponseDTO(
+                token,
+                authenticatedUser.isOnboardingCompleted(),
+                authenticatedUser.getXp(),
+                authenticatedUser.getLevel(),
+                authenticatedUser.getCurrentStreak(),
+                authenticatedUser.getName(),
+                authenticatedUser.getEmail()
+        );
+    }
+
+    @Transactional
+    public LoginResponseDTO verifyAccount(String email, String token) {
+        User user = validateAndGetUserByToken(email, token, TokenType.REGISTRATION);
+        user.setEnabled(true);
+        userRepository.save(user);
+        tokenRepository.deleteByUserAndType(user, TokenType.REGISTRATION);
+
+        String jwtToken = tokenService.generateToken(user);
+
+        return new LoginResponseDTO(
+                jwtToken,
+                user.isOnboardingCompleted(),
+                user.getXp(),
+                user.getLevel(),
+                user.getCurrentStreak(),
+                user.getName(),
+                user.getEmail()
+        );
+    }
+
+    @Transactional
+    public void requestPasswordReset(String email) {
+        User user = (User) userRepository.findByEmail(email);
+        if (user != null && user.isEnabled()) {
+            generateAndSendOtp(user, TokenType.PASSWORD_RESET);
+        }
+    }
+
+    @Transactional
+    public void resetPassword(String email, String token, String newPassword) {
+        User user = validateAndGetUserByToken(email, token, TokenType.PASSWORD_RESET);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        tokenRepository.deleteByUserAndType(user, TokenType.PASSWORD_RESET);
+    }
+
+    private void generateAndSendOtp(User user, TokenType type) {
+        tokenRepository.deleteByUserAndType(user, type);
+
+        String otp = String.format("%06d", new SecureRandom().nextInt(999999));
+
+        VerificationToken token = VerificationToken.builder()
+                .token(otp)
+                .user(user)
+                .type(type)
+                .expiryDate(LocalDateTime.now().plusMinutes(15))
+                .build();
+
+        tokenRepository.save(token);
+
+        var locale = LocaleContextHolder.getLocale();
+        String subjectKey = type == TokenType.REGISTRATION ? "email.register.subject" : "email.forgot.subject";
+        String bodyKey = type == TokenType.REGISTRATION ? "email.register.body" : "email.forgot.body";
+
+        String subject = messageSource.getMessage(subjectKey, null, locale);
+        String message = messageSource.getMessage(bodyKey, new Object[]{otp}, locale);
+
+        emailService.sendOtpEmail(user.getEmail(), otp, subject, message);
+    }
+
+    private User validateAndGetUserByToken(String email, String otp, TokenType type) {
+        User user = (User) userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid user");
+        }
+
+        Optional<VerificationToken> tokenOpt = tokenRepository.findByTokenAndTypeAndUser(otp, type, user);
+        if (tokenOpt.isEmpty() || tokenOpt.get().getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Invalid or expired token");
+        }
+
+        return user;
+    }
+}

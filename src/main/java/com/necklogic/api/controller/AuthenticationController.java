@@ -1,60 +1,71 @@
 package com.necklogic.api.controller;
 
-import com.necklogic.api.dto.AuthenticationDTO;
-import com.necklogic.api.dto.LoginResponseDTO;
-import com.necklogic.api.dto.RegisterDTO;
-import com.necklogic.api.model.User;
-import com.necklogic.api.repository.UserRepository;
-import com.necklogic.api.security.TokenService;
+import com.necklogic.api.dto.*;
+import com.necklogic.api.service.AuthenticationService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("auth")
 @CrossOrigin(origins = "*")
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository repository;
-    private final TokenService tokenService;
+    private final AuthenticationService authenticationService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, UserRepository repository, TokenService tokenService) {
-        this.authenticationManager = authenticationManager;
-        this.repository = repository;
-        this.tokenService = tokenService;
+    public AuthenticationController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-        User user = (User) auth.getPrincipal();
-        var token = tokenService.generateToken(user);
-
-        return ResponseEntity.ok(new LoginResponseDTO(
-                token,
-                user.isOnboardingCompleted(),
-                user.getXp(),
-                user.getLevel(),
-                user.getCurrentStreak(),
-                user.getName(),
-                user.getEmail()
-        ));
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) {
+        try {
+            return ResponseEntity.ok(authenticationService.login(data));
+        } catch (IllegalStateException e) {
+            if ("ACCOUNT_DISABLED".equals(e.getMessage())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", "ACCOUNT_DISABLED"));
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Credenciais inválidas"));
+        }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody @Valid RegisterDTO data) {
-        if (this.repository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
+        try {
+            authenticationService.registerUser(data);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Email já registrado e ativado."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Dados inválidos."));
+        }
+    }
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.email(), encryptedPassword, data.name());
+    @PostMapping("/verify-account")
+    public ResponseEntity<?> verifyAccount(@RequestBody @Valid OtpVerificationDTO data) {
+        try {
+            return ResponseEntity.ok(authenticationService.verifyAccount(data.email(), data.token()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Código inválido ou expirado."));
+        }
+    }
 
-        this.repository.save(newUser);
-
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@RequestBody @Valid ForgotPasswordDTO data) {
+        authenticationService.requestPasswordReset(data.email());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody @Valid ResetPasswordDTO data) {
+        try {
+            authenticationService.resetPassword(data.email(), data.token(), data.newPassword());
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Código inválido ou expirado."));
+        }
     }
 }
