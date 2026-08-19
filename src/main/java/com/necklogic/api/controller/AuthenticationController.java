@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("auth")
-@CrossOrigin(origins = "*")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -36,12 +35,10 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
         try {
             authenticationService.registerUser(data);
-            return ResponseEntity.ok().build();
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Email já registrado e ativado."));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", "Dados inválidos."));
         }
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/verify-account")
