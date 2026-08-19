@@ -54,14 +54,13 @@ public class AuthenticationService {
 
         if (existingUser != null) {
             if (existingUser.isEnabled()) {
-                throw new IllegalStateException("Email already registered and verified");
-            } else {
-                existingUser.setName(data.name());
-                existingUser.setPassword(passwordEncoder.encode(data.password()));
-                userRepository.save(existingUser);
-                generateAndSendOtp(existingUser, TokenType.REGISTRATION);
                 return;
             }
+            existingUser.setName(data.name());
+            existingUser.setPassword(passwordEncoder.encode(data.password()));
+            userRepository.save(existingUser);
+            generateAndSendOtp(existingUser, TokenType.REGISTRATION);
+            return;
         }
 
         User user = new User(data.email(), passwordEncoder.encode(data.password()), data.name());
