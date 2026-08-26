@@ -1,0 +1,146 @@
+package com.necklogic.api.service;
+
+import com.necklogic.api.dto.CreateTrackRequestDTO;
+import com.necklogic.api.dto.TrackResponseDTO;
+import com.necklogic.api.dto.UpdateTrackRequestDTO;
+import com.necklogic.api.exception.ForbiddenActionException;
+import com.necklogic.api.exception.ResourceNotFoundException;
+import com.necklogic.api.model.Module;
+import com.necklogic.api.model.Section;
+import com.necklogic.api.model.Track;
+import com.necklogic.api.model.User;
+import com.necklogic.api.model.UserTrackEnrollment;
+import com.necklogic.api.repository.SectionRepository;
+import com.necklogic.api.repository.TrackRepository;
+import com.necklogic.api.repository.UserProgressRepository;
+import com.necklogic.api.repository.UserTrackEnrollmentRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class TrackService {
+
+    private final TrackRepository trackRepository;
+    private final SectionRepository sectionRepository;
+    private final UserProgressRepository progressRepository;
+    private final UserTrackEnrollmentRepository enrollmentRepository;
+
+    public TrackService(TrackRepository trackRepository,
+                        SectionRepository sectionRepository,
+                        UserProgressRepository progressRepository,
+                        UserTrackEnrollmentRepository enrollmentRepository) {
+        this.trackRepository = trackRepository;
+        this.sectionRepository = sectionRepository;
+        this.progressRepository = progressRepository;
+        this.enrollmentRepository = enrollmentRepository;
+    }
+
+    public boolean canEdit(User user, Track track) {
+        if (track.isOfficial()) {
+            return user.isAdmin();
+        }
+        return track.getOwner() != null && track.getOwner().getId().equals(user.getId());
+    }
+
+    public void requireEditAccess(User user, Track track) {
+        if (!canEdit(user, track)) {
+            throw new ForbiddenActionException("Você não tem permissão para editar esta trilha.");
+        }
+    }
+
+    public Track getTrackOrThrow(Long trackId) {
+        return trackRepository.findById(trackId)
+                .orElseThrow(() -> new ResourceNotFoundException("Trilha não encontrada com ID: " + trackId));
+    }
+
+    public List<TrackResponseDTO> listPublished() {
+        return trackRepository.findByPublishedTrue().stream().map(this::toDTO).toList();
+    }
+
+    public List<TrackResponseDTO> listOwnedBy(User user) {
+        List<Track> owned = new ArrayList<>(trackRepository.findByOwner(user));
+
+        if (user.isAdmin()) {
+            trackRepository.findByOfficialTrue().ifPresent(official -> {
+                if (owned.stream().noneMatch(t -> t.getId().equals(official.getId()))) {
+                    owned.add(official);
+                }
+            });
+        }
+
+        return owned.stream().map(this::toDTO).toList();
+    }
+
+    @Transactional
+    public TrackResponseDTO create(User owner, CreateTrackRequestDTO data) {
+        if (!owner.isTeacher() && !owner.isAdmin()) {
+            throw new ForbiddenActionException("Apenas professores podem criar trilhas.");
+        }
+
+        Track track = new Track(data.title(), data.description(), owner, false, false);
+        track.setPaid(Boolean.TRUE.equals(data.paid()));
+        track.setPriceCents(data.priceCents());
+
+        return toDTO(trackRepository.save(track));
+    }
+
+    @Transactional
+    public TrackResponseDTO update(Long trackId, User user, UpdateTrackRequestDTO data) {
+        Track track = getTrackOrThrow(trackId);
+        requireEditAccess(user, track);
+
+        if (data.title() != null) track.setTitle(data.title());
+        if (data.description() != null) track.setDescription(data.description());
+        if (data.published() != null) track.setPublished(data.published());
+        if (data.paid() != null) track.setPaid(data.paid());
+        if (data.priceCents() != null) track.setPriceCents(data.priceCents());
+
+        return toDTO(trackRepository.save(track));
+    }
+
+    @Transactional
+    public void delete(Long trackId, User user) {
+        Track track = getTrackOrThrow(trackId);
+        requireEditAccess(user, track);
+
+        if (track.isOfficial()) {
+            throw new ForbiddenActionException("A trilha oficial não pode ser excluída.");
+        }
+
+        List<Section> sections = sectionRepository.findByTrack(track);
+        List<Module> modules = sections.stream().flatMap(section -> section.getModules().stream()).toList();
+
+        progressRepository.deleteByModuleIn(modules);
+        enrollmentRepository.deleteByTrack(track);
+        sectionRepository.deleteAll(sections);
+        trackRepository.delete(track);
+    }
+
+    @Transactional
+    public UserTrackEnrollment enroll(Long trackId, User user) {
+        Track track = getTrackOrThrow(trackId);
+
+        if (!track.isPublished()) {
+            throw new ForbiddenActionException("Esta trilha ainda não foi publicada.");
+        }
+
+        return enrollmentRepository.findByUserAndTrack(user, track)
+                .orElseGet(() -> enrollmentRepository.save(new UserTrackEnrollment(user, track)));
+    }
+
+    private TrackResponseDTO toDTO(Track track) {
+        return new TrackResponseDTO(
+                track.getId(),
+                track.getTitle(),
+                track.getDescription(),
+                track.getOwner() != null ? track.getOwner().getName() : "NeckLogic",
+                track.isOfficial(),
+                track.isPublished(),
+                track.isPaid(),
+                track.getPriceCents()
+        );
+    }
+}

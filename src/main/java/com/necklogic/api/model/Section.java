@@ -1,5 +1,6 @@
 package com.necklogic.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,11 @@ public class Section {
 
     @Column(name = "order_index")
     private Integer orderIndex;
+
+    @ManyToOne
+    @JoinColumn(name = "track_id")
+    @JsonIgnore
+    private Track track;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
     private List<Module> modules = new ArrayList<>();

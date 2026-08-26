@@ -1,5 +1,6 @@
 package com.necklogic.api.repository;
 
+import com.necklogic.api.model.Module;
 import com.necklogic.api.model.UserProgress;
 import com.necklogic.api.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,5 @@ public interface UserProgressRepository extends JpaRepository<UserProgress, Long
     List<UserProgress> findByUser(User user);
     Optional<UserProgress> findByUserAndModuleId(User user, Long moduleId);
     void deleteByUser(User user);
+    void deleteByModuleIn(List<Module> modules);
 }

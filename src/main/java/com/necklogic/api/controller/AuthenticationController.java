@@ -65,4 +65,10 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(Map.of("message", "Código inválido ou expirado."));
         }
     }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<Void> resendVerification(@RequestBody @Valid ForgotPasswordDTO data) {
+        authenticationService.resendVerification(data.email());
+        return ResponseEntity.ok().build();
+    }
 }

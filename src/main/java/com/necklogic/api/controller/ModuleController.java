@@ -4,6 +4,8 @@ import com.necklogic.api.dto.LessonContentDTO;
 import com.necklogic.api.dto.ModuleCompletionRequestDTO;
 import com.necklogic.api.dto.ModuleCompletionResponseDTO;
 import com.necklogic.api.dto.ModuleResponseDTO;
+import com.necklogic.api.dto.UpdateModuleRequestDTO;
+import com.necklogic.api.model.Module;
 import com.necklogic.api.model.User;
 import com.necklogic.api.service.ModuleService;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +44,20 @@ public class ModuleController {
             @RequestBody ModuleCompletionRequestDTO request) {
         ModuleCompletionResponseDTO response = moduleService.completeModule(id, user, request.mistakesCount());
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Module> update(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user,
+            @RequestBody UpdateModuleRequestDTO data) {
+        Module module = moduleService.update(id, user, data);
+        return ResponseEntity.ok(module);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        moduleService.delete(id, user);
+        return ResponseEntity.noContent().build();
     }
 }

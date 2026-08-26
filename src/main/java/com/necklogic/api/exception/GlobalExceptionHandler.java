@@ -22,14 +22,29 @@ public class GlobalExceptionHandler {
         logger.warn("Authentication failed: {} - Path: {}", ex.getMessage(), request.getRequestURI());
 
         ErrorResponseDTO error = new ErrorResponseDTO(
-            LocalDateTime.now(),
-            HttpStatus.UNAUTHORIZED.value(),
-            "Unauthorized",
-            "E-mail ou senha incorretos",
-            request.getRequestURI()
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                "E-mail ou senha incorretos",
+                request.getRequestURI()
         );
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(ForbiddenActionException.class)
+    public ResponseEntity<ErrorResponseDTO> handleForbiddenAction(ForbiddenActionException ex, HttpServletRequest request) {
+        logger.warn("Forbidden action: {} - Path: {}", ex.getMessage(), request.getRequestURI());
+
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                "Forbidden",
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -37,11 +52,11 @@ public class GlobalExceptionHandler {
         logger.warn("Resource not found: {} - Path: {}", ex.getMessage(), request.getRequestURI());
 
         ErrorResponseDTO error = new ErrorResponseDTO(
-            LocalDateTime.now(),
-            HttpStatus.NOT_FOUND.value(),
-            "Not Found",
-            ex.getMessage(),
-            request.getRequestURI()
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                ex.getMessage(),
+                request.getRequestURI()
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -52,11 +67,11 @@ public class GlobalExceptionHandler {
         logger.error("Internal Server Error: {} - Path: {}", ex.getMessage(), request.getRequestURI(), ex);
 
         ErrorResponseDTO error = new ErrorResponseDTO(
-            LocalDateTime.now(),
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            "Internal Server Error",
-            "An unexpected error occurred",
-            request.getRequestURI()
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "An unexpected error occurred",
+                request.getRequestURI()
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
