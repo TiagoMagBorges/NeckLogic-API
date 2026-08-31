@@ -1,6 +1,6 @@
 package com.necklogic.api.controller;
 
-import com.necklogic.api.dto.*;
+import com.necklogic.api.dto.auth.*;
 import com.necklogic.api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

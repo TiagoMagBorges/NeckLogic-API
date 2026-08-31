@@ -1,8 +1,8 @@
 package com.necklogic.api.service;
 
-import com.necklogic.api.dto.CreateTrackRequestDTO;
-import com.necklogic.api.dto.TrackResponseDTO;
-import com.necklogic.api.dto.UpdateTrackRequestDTO;
+import com.necklogic.api.dto.track.CreateTrackRequestDTO;
+import com.necklogic.api.dto.track.TrackResponseDTO;
+import com.necklogic.api.dto.track.UpdateTrackRequestDTO;
 import com.necklogic.api.exception.ForbiddenActionException;
 import com.necklogic.api.exception.ResourceNotFoundException;
 import com.necklogic.api.model.Module;
@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TrackService {
@@ -56,8 +58,11 @@ public class TrackService {
                 .orElseThrow(() -> new ResourceNotFoundException("Trilha não encontrada com ID: " + trackId));
     }
 
-    public List<TrackResponseDTO> listPublished() {
-        return trackRepository.findByPublishedTrue().stream().map(this::toDTO).toList();
+    public List<TrackResponseDTO> listPublished(User user) {
+        Set<Long> enrolledTrackIds = enrolledTrackIds(user);
+        return trackRepository.findByPublishedTrue().stream()
+                .map(track -> toDTO(track, enrolledTrackIds.contains(track.getId())))
+                .toList();
     }
 
     public List<TrackResponseDTO> listOwnedBy(User user) {
@@ -71,7 +76,14 @@ public class TrackService {
             });
         }
 
-        return owned.stream().map(this::toDTO).toList();
+        Set<Long> enrolledTrackIds = enrolledTrackIds(user);
+        return owned.stream().map(track -> toDTO(track, enrolledTrackIds.contains(track.getId()))).toList();
+    }
+
+    private Set<Long> enrolledTrackIds(User user) {
+        return enrollmentRepository.findByUser(user).stream()
+                .map(enrollment -> enrollment.getTrack().getId())
+                .collect(Collectors.toSet());
     }
 
     @Transactional
@@ -84,7 +96,7 @@ public class TrackService {
         track.setPaid(Boolean.TRUE.equals(data.paid()));
         track.setPriceCents(data.priceCents());
 
-        return toDTO(trackRepository.save(track));
+        return toDTO(trackRepository.save(track), false);
     }
 
     @Transactional
@@ -98,7 +110,8 @@ public class TrackService {
         if (data.paid() != null) track.setPaid(data.paid());
         if (data.priceCents() != null) track.setPriceCents(data.priceCents());
 
-        return toDTO(trackRepository.save(track));
+        boolean enrolled = enrollmentRepository.findByUserAndTrack(user, track).isPresent();
+        return toDTO(trackRepository.save(track), enrolled);
     }
 
     @Transactional
@@ -131,7 +144,7 @@ public class TrackService {
                 .orElseGet(() -> enrollmentRepository.save(new UserTrackEnrollment(user, track)));
     }
 
-    private TrackResponseDTO toDTO(Track track) {
+    private TrackResponseDTO toDTO(Track track, boolean enrolled) {
         return new TrackResponseDTO(
                 track.getId(),
                 track.getTitle(),
@@ -140,7 +153,8 @@ public class TrackService {
                 track.isOfficial(),
                 track.isPublished(),
                 track.isPaid(),
-                track.getPriceCents()
+                track.getPriceCents(),
+                enrolled
         );
     }
 }

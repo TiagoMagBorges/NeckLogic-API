@@ -1,4 +1,4 @@
-package com.necklogic.api.dto;
+package com.necklogic.api.dto.track;
 
 public record TrackResponseDTO(
         Long id,
@@ -8,5 +8,6 @@ public record TrackResponseDTO(
         boolean official,
         boolean published,
         boolean paid,
-        Integer priceCents
+        Integer priceCents,
+        boolean enrolled
 ) {}

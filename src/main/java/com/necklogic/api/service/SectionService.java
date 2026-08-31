@@ -1,7 +1,9 @@
 package com.necklogic.api.service;
 
-import com.necklogic.api.dto.CreateSectionRequestDTO;
-import com.necklogic.api.dto.UpdateSectionRequestDTO;
+import com.necklogic.api.dto.section.CreateSectionRequestDTO;
+import com.necklogic.api.dto.module.ModuleSummaryDTO;
+import com.necklogic.api.dto.section.SectionResponseDTO;
+import com.necklogic.api.dto.section.UpdateSectionRequestDTO;
 import com.necklogic.api.exception.ResourceNotFoundException;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.Section;
@@ -15,6 +17,7 @@ import com.necklogic.api.repository.UserProgressRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -106,5 +109,24 @@ public class SectionService {
 
         progressRepository.deleteByModuleIn(section.getModules());
         sectionRepository.delete(section);
+    }
+
+    public List<SectionResponseDTO> listByTrack(Long trackId, User user) {
+        Track track = trackService.getTrackOrThrow(trackId);
+        trackService.requireEditAccess(user, track);
+
+        return sectionRepository.findByTrack(track).stream()
+                .sorted(Comparator.comparing(Section::getOrderIndex))
+                .map(this::toDTO)
+                .toList();
+    }
+
+    private SectionResponseDTO toDTO(Section section) {
+        List<ModuleSummaryDTO> modules = section.getModules().stream()
+                .sorted(Comparator.comparing(Module::getOrderIndex))
+                .map(module -> new ModuleSummaryDTO(module.getId(), module.getTitle(), module.getOrderIndex()))
+                .toList();
+
+        return new SectionResponseDTO(section.getId(), section.getTitle(), section.getDescription(), section.getOrderIndex(), modules);
     }
 }

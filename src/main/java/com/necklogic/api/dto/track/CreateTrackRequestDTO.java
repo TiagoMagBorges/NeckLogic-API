@@ -1,4 +1,4 @@
-package com.necklogic.api.dto;
+package com.necklogic.api.dto.track;
 
 import jakarta.validation.constraints.NotBlank;
 

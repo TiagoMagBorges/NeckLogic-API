@@ -1,10 +1,11 @@
 package com.necklogic.api.controller;
 
-import com.necklogic.api.dto.CreateSectionRequestDTO;
-import com.necklogic.api.dto.CreateTrackRequestDTO;
-import com.necklogic.api.dto.ModuleResponseDTO;
-import com.necklogic.api.dto.TrackResponseDTO;
-import com.necklogic.api.dto.UpdateTrackRequestDTO;
+import com.necklogic.api.dto.module.ModuleResponseDTO;
+import com.necklogic.api.dto.section.CreateSectionRequestDTO;
+import com.necklogic.api.dto.section.SectionResponseDTO;
+import com.necklogic.api.dto.track.CreateTrackRequestDTO;
+import com.necklogic.api.dto.track.TrackResponseDTO;
+import com.necklogic.api.dto.track.UpdateTrackRequestDTO;
 import com.necklogic.api.model.Section;
 import com.necklogic.api.model.User;
 import com.necklogic.api.service.ModuleService;
@@ -32,8 +33,8 @@ public class TrackController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TrackResponseDTO>> listPublished() {
-        return ResponseEntity.ok(trackService.listPublished());
+    public ResponseEntity<List<TrackResponseDTO>> listPublished(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(trackService.listPublished(user));
     }
 
     @GetMapping("/mine")
@@ -75,5 +76,10 @@ public class TrackController {
             @RequestBody @Valid CreateSectionRequestDTO data) {
         Section section = sectionService.create(id, user, data);
         return ResponseEntity.ok(section);
+    }
+
+    @GetMapping("/{id}/sections")
+    public ResponseEntity<List<SectionResponseDTO>> listSections(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(sectionService.listByTrack(id, user));
     }
 }

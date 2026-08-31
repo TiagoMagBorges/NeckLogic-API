@@ -1,8 +1,8 @@
 package com.necklogic.api.service;
 
-import com.necklogic.api.dto.AuthenticationDTO;
-import com.necklogic.api.dto.LoginResponseDTO;
-import com.necklogic.api.dto.RegisterDTO;
+import com.necklogic.api.dto.auth.AuthenticationDTO;
+import com.necklogic.api.dto.auth.LoginResponseDTO;
+import com.necklogic.api.dto.auth.RegisterDTO;
 import com.necklogic.api.model.Track;
 import com.necklogic.api.model.User;
 import com.necklogic.api.model.UserTrackEnrollment;

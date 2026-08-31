@@ -1,10 +1,6 @@
 package com.necklogic.api.controller;
 
-import com.necklogic.api.dto.LessonContentDTO;
-import com.necklogic.api.dto.ModuleCompletionRequestDTO;
-import com.necklogic.api.dto.ModuleCompletionResponseDTO;
-import com.necklogic.api.dto.ModuleResponseDTO;
-import com.necklogic.api.dto.UpdateModuleRequestDTO;
+import com.necklogic.api.dto.module.*;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.User;
 import com.necklogic.api.service.ModuleService;
@@ -59,5 +55,10 @@ public class ModuleController {
     public ResponseEntity<Void> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
         moduleService.delete(id, user);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ModuleDetailDTO> getForEdit(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(moduleService.getForEdit(id, user));
     }
 }

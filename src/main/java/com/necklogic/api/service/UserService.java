@@ -1,10 +1,14 @@
 package com.necklogic.api.service;
 
-import com.necklogic.api.dto.UpdatePasswordRequestDTO;
-import com.necklogic.api.dto.UpdateProfileRequestDTO;
+import com.necklogic.api.dto.user.UpdatePasswordRequestDTO;
+import com.necklogic.api.dto.user.UpdateProfileRequestDTO;
+import com.necklogic.api.model.Track;
 import com.necklogic.api.model.User;
+import com.necklogic.api.repository.TrackRepository;
 import com.necklogic.api.repository.UserProgressRepository;
 import com.necklogic.api.repository.UserRepository;
+import com.necklogic.api.repository.UserTrackEnrollmentRepository;
+import com.necklogic.api.repository.VerificationTokenRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +18,22 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserProgressRepository progressRepository;
+    private final UserTrackEnrollmentRepository enrollmentRepository;
+    private final TrackRepository trackRepository;
+    private final VerificationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, UserProgressRepository progressRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       UserProgressRepository progressRepository,
+                       UserTrackEnrollmentRepository enrollmentRepository,
+                       TrackRepository trackRepository,
+                       VerificationTokenRepository tokenRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.progressRepository = progressRepository;
+        this.enrollmentRepository = enrollmentRepository;
+        this.trackRepository = trackRepository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -50,7 +65,14 @@ public class UserService {
 
     @Transactional
     public void deleteAccount(User user) {
+        for (Track track : trackRepository.findByOwner(user)) {
+            track.setOwner(null);
+            trackRepository.save(track);
+        }
+
         progressRepository.deleteByUser(user);
+        enrollmentRepository.deleteByUser(user);
+        tokenRepository.deleteByUser(user);
         userRepository.delete(user);
     }
 }

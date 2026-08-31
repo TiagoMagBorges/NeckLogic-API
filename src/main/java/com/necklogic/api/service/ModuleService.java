@@ -1,10 +1,6 @@
 package com.necklogic.api.service;
 
-import com.necklogic.api.dto.CreateModuleRequestDTO;
-import com.necklogic.api.dto.LessonContentDTO;
-import com.necklogic.api.dto.ModuleCompletionResponseDTO;
-import com.necklogic.api.dto.ModuleResponseDTO;
-import com.necklogic.api.dto.UpdateModuleRequestDTO;
+import com.necklogic.api.dto.module.*;
 import com.necklogic.api.exception.ResourceNotFoundException;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.Section;
@@ -218,6 +214,21 @@ public class ModuleService {
 
         progressRepository.deleteByModuleIn(List.of(module));
         moduleRepository.delete(module);
+    }
+
+    public ModuleDetailDTO getForEdit(Long moduleId, User user) {
+        Module module = moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Módulo não encontrado com ID: " + moduleId));
+        trackService.requireEditAccess(user, module.getSection().getTrack());
+
+        return new ModuleDetailDTO(
+                module.getId(),
+                module.getTitle(),
+                module.getOrderIndex(),
+                module.getXpReward(),
+                module.getContent(),
+                module.getSection().getId()
+        );
     }
 
     private UserTrackEnrollment getOrCreateEnrollment(User user, Track track) {

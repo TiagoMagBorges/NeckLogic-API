@@ -1,6 +1,6 @@
 package com.necklogic.api.exception;
 
-import com.necklogic.api.dto.ErrorResponseDTO;
+import com.necklogic.api.dto.common.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

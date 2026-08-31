@@ -12,4 +12,5 @@ public interface UserTrackEnrollmentRepository extends JpaRepository<UserTrackEn
     Optional<UserTrackEnrollment> findByUserAndTrack(User user, Track track);
     List<UserTrackEnrollment> findByUser(User user);
     void deleteByTrack(Track track);
+    void deleteByUser(User user);
 }

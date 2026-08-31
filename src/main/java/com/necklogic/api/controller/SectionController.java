@@ -1,7 +1,7 @@
 package com.necklogic.api.controller;
 
-import com.necklogic.api.dto.CreateModuleRequestDTO;
-import com.necklogic.api.dto.UpdateSectionRequestDTO;
+import com.necklogic.api.dto.module.CreateModuleRequestDTO;
+import com.necklogic.api.dto.section.UpdateSectionRequestDTO;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.Section;
 import com.necklogic.api.model.User;
