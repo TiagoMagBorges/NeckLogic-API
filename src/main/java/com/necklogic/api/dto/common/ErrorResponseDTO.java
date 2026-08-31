@@ -1,4 +1,4 @@
-package com.necklogic.api.dto;
+package com.necklogic.api.dto.common;
 
 import java.time.LocalDateTime;
 

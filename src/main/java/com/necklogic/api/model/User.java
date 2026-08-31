@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,43 +34,31 @@ public class User implements UserDetails {
     private boolean onboardingCompleted = false;
 
     @Column(nullable = false)
-    private Integer xp = 0;
-
-    @Column(name = "user_level", nullable = false)
-    private Integer level = 1;
-
-    @Column(name = "last_activity_date")
-    private LocalDate lastActivityDate;
-
-    @Column(name = "current_streak", nullable = false)
-    private Integer currentStreak = 0;
-
-    @Column(nullable = false)
     private boolean enabled = false;
+
+    @Column(name = "is_teacher", nullable = false)
+    private boolean teacher = false;
+
+    @Column(name = "is_admin", nullable = false)
+    private boolean admin = false;
 
     public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.onboardingCompleted = false;
-        this.xp = 0;
-        this.level = 1;
-        this.currentStreak = 0;
         this.enabled = false;
-    }
-
-    public void addXp(Integer gainedXp) {
-        this.xp += gainedXp;
-        this.level = calculateLevel(this.xp);
-    }
-
-    private Integer calculateLevel(Integer totalXp) {
-        return (int) (0.1 * Math.sqrt(totalXp)) + 1;
+        this.teacher = false;
+        this.admin = false;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        if (teacher) authorities.add(new SimpleGrantedAuthority("ROLE_TEACHER"));
+        if (admin) authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        return authorities;
     }
 
     @Override

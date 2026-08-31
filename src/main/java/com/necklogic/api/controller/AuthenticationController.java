@@ -1,6 +1,6 @@
 package com.necklogic.api.controller;
 
-import com.necklogic.api.dto.*;
+import com.necklogic.api.dto.auth.*;
 import com.necklogic.api.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -64,5 +64,11 @@ public class AuthenticationController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", "Código inválido ou expirado."));
         }
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<Void> resendVerification(@RequestBody @Valid ForgotPasswordDTO data) {
+        authenticationService.resendVerification(data.email());
+        return ResponseEntity.ok().build();
     }
 }

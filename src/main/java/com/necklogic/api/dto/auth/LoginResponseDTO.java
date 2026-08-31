@@ -1,4 +1,4 @@
-package com.necklogic.api.dto;
+package com.necklogic.api.dto.auth;
 
 public record LoginResponseDTO(
     String token,

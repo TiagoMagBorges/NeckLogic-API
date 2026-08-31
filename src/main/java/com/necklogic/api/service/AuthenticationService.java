@@ -1,12 +1,16 @@
 package com.necklogic.api.service;
 
-import com.necklogic.api.dto.AuthenticationDTO;
-import com.necklogic.api.dto.LoginResponseDTO;
-import com.necklogic.api.dto.RegisterDTO;
+import com.necklogic.api.dto.auth.AuthenticationDTO;
+import com.necklogic.api.dto.auth.LoginResponseDTO;
+import com.necklogic.api.dto.auth.RegisterDTO;
+import com.necklogic.api.model.Track;
 import com.necklogic.api.model.User;
+import com.necklogic.api.model.UserTrackEnrollment;
 import com.necklogic.api.model.VerificationToken;
 import com.necklogic.api.model.enums.TokenType;
+import com.necklogic.api.repository.TrackRepository;
 import com.necklogic.api.repository.UserRepository;
+import com.necklogic.api.repository.UserTrackEnrollmentRepository;
 import com.necklogic.api.repository.VerificationTokenRepository;
 import com.necklogic.api.security.TokenService;
 import org.springframework.context.MessageSource;
@@ -31,6 +35,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final MessageSource messageSource;
+    private final TrackRepository trackRepository;
+    private final UserTrackEnrollmentRepository enrollmentRepository;
 
     public AuthenticationService(UserRepository userRepository,
                                  VerificationTokenRepository tokenRepository,
@@ -38,7 +44,9 @@ public class AuthenticationService {
                                  PasswordEncoder passwordEncoder,
                                  AuthenticationManager authenticationManager,
                                  TokenService tokenService,
-                                 MessageSource messageSource) {
+                                 MessageSource messageSource,
+                                 TrackRepository trackRepository,
+                                 UserTrackEnrollmentRepository enrollmentRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.emailService = emailService;
@@ -46,11 +54,23 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
         this.messageSource = messageSource;
+        this.trackRepository = trackRepository;
+        this.enrollmentRepository = enrollmentRepository;
+    }
+
+    private UserTrackEnrollment getOrCreateOfficialEnrollment(User user) {
+        Track officialTrack = trackRepository.findByOfficialTrue()
+                .orElseThrow(() -> new IllegalStateException("No official track configured"));
+
+        return enrollmentRepository.findByUserAndTrack(user, officialTrack)
+                .orElseGet(() -> enrollmentRepository.save(new UserTrackEnrollment(user, officialTrack)));
     }
 
     @Transactional
     public void registerUser(RegisterDTO data) {
         User existingUser = userRepository.findByEmail(data.email());
+
+        boolean asTeacher = Boolean.TRUE.equals(data.asTeacher());
 
         if (existingUser != null) {
             if (existingUser.isEnabled()) {
@@ -58,12 +78,14 @@ public class AuthenticationService {
             }
             existingUser.setName(data.name());
             existingUser.setPassword(passwordEncoder.encode(data.password()));
+            existingUser.setTeacher(asTeacher);
             userRepository.save(existingUser);
             generateAndSendOtp(existingUser, TokenType.REGISTRATION);
             return;
         }
 
         User user = new User(data.email(), passwordEncoder.encode(data.password()), data.name());
+        user.setTeacher(asTeacher);
         userRepository.save(user);
 
         generateAndSendOtp(user, TokenType.REGISTRATION);
@@ -80,13 +102,14 @@ public class AuthenticationService {
         var auth = authenticationManager.authenticate(usernamePassword);
         User authenticatedUser = (User) auth.getPrincipal();
         var token = tokenService.generateToken(authenticatedUser);
+        UserTrackEnrollment enrollment = getOrCreateOfficialEnrollment(authenticatedUser);
 
         return new LoginResponseDTO(
                 token,
                 authenticatedUser.isOnboardingCompleted(),
-                authenticatedUser.getXp(),
-                authenticatedUser.getLevel(),
-                authenticatedUser.getCurrentStreak(),
+                enrollment.getXp(),
+                enrollment.getLevel(),
+                enrollment.getCurrentStreak(),
                 authenticatedUser.getName(),
                 authenticatedUser.getEmail()
         );
@@ -100,13 +123,14 @@ public class AuthenticationService {
         tokenRepository.deleteByUserAndType(user, TokenType.REGISTRATION);
 
         String jwtToken = tokenService.generateToken(user);
+        UserTrackEnrollment enrollment = getOrCreateOfficialEnrollment(user);
 
         return new LoginResponseDTO(
                 jwtToken,
                 user.isOnboardingCompleted(),
-                user.getXp(),
-                user.getLevel(),
-                user.getCurrentStreak(),
+                enrollment.getXp(),
+                enrollment.getLevel(),
+                enrollment.getCurrentStreak(),
                 user.getName(),
                 user.getEmail()
         );
@@ -126,6 +150,14 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         tokenRepository.deleteByUserAndType(user, TokenType.PASSWORD_RESET);
+    }
+
+    @Transactional
+    public void resendVerification(String email) {
+        User user = (User) userRepository.findByEmail(email);
+        if (user != null && !user.isEnabled()) {
+            generateAndSendOtp(user, TokenType.REGISTRATION);
+        }
     }
 
     private void generateAndSendOtp(User user, TokenType type) {

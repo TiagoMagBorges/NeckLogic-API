@@ -1,7 +1,7 @@
 package com.necklogic.api.controller;
 
-import com.necklogic.api.dto.UpdatePasswordRequestDTO;
-import com.necklogic.api.dto.UpdateProfileRequestDTO;
+import com.necklogic.api.dto.user.UpdatePasswordRequestDTO;
+import com.necklogic.api.dto.user.UpdateProfileRequestDTO;
 import com.necklogic.api.model.User;
 import com.necklogic.api.repository.UserRepository;
 import com.necklogic.api.service.UserService;
