@@ -152,8 +152,8 @@ public class ModuleService {
             leveledUp = enrollment.getLevel() > oldLevel;
         }
 
-        moduleRepository.findBySectionAndOrderIndex(
-                currentModule.getSection(),
+        moduleRepository.findBySectionTrackAndOrderIndex(
+                track,
                 currentModule.getOrderIndex() + 1
         ).ifPresent(nextModule -> {
             UserProgress nextProgress = progressRepository.findByUserAndModuleId(user, nextModule.getId())
