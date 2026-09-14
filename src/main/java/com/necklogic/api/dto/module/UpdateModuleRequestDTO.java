@@ -4,5 +4,6 @@ public record UpdateModuleRequestDTO(
         String title,
         Integer orderIndex,
         Integer xpReward,
-        String content
+        String content,
+        Boolean isSkipTest
 ) {}

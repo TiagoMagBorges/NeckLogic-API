@@ -43,19 +43,8 @@ public class SectionService {
         Section currentSection = sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new RuntimeException("Seção não encontrada"));
 
-        List<Module> modules = currentSection.getModules();
-        for (Module module : modules) {
-            UserProgress progress = progressRepository.findByUserAndModuleId(user, module.getId())
-                    .orElseGet(() -> {
-                        UserProgress newProgress = new UserProgress();
-                        newProgress.setUser(user);
-                        newProgress.setModule(module);
-                        return newProgress;
-                    });
-
-            progress.setStatus(ModuleStatus.COMPLETED);
-            progress.setPercentage(100);
-            progressRepository.save(progress);
+        if (currentSection.isSkipRequiresTest()) {
+            throw new IllegalStateException("Esta seção exige o teste de pular");
         }
 
         sectionRepository.findByTrackAndOrderIndex(currentSection.getTrack(), currentSection.getOrderIndex() + 1)
@@ -97,6 +86,13 @@ public class SectionService {
         if (data.title() != null) section.setTitle(data.title());
         if (data.description() != null) section.setDescription(data.description());
         if (data.orderIndex() != null) section.setOrderIndex(data.orderIndex());
+        if (data.skipRequiresTest() != null) section.setSkipRequiresTest(data.skipRequiresTest());
+        if (data.skipPassThreshold() != null) section.setSkipPassThreshold(data.skipPassThreshold());
+        if (data.skipTestModuleId() != null) {
+            Module skipTestModule = moduleRepository.findById(data.skipTestModuleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Módulo não encontrado com ID: " + data.skipTestModuleId()));
+            section.setSkipTestModule(skipTestModule);
+        }
 
         return sectionRepository.save(section);
     }
@@ -124,9 +120,20 @@ public class SectionService {
     private SectionResponseDTO toDTO(Section section) {
         List<ModuleSummaryDTO> modules = section.getModules().stream()
                 .sorted(Comparator.comparing(Module::getOrderIndex))
-                .map(module -> new ModuleSummaryDTO(module.getId(), module.getTitle(), module.getOrderIndex()))
+                .map(module -> new ModuleSummaryDTO(module.getId(), module.getTitle(), module.getOrderIndex(), module.isSkipTest()))
                 .toList();
 
-        return new SectionResponseDTO(section.getId(), section.getTitle(), section.getDescription(), section.getOrderIndex(), modules);
+        Long skipTestModuleId = section.getSkipTestModule() != null ? section.getSkipTestModule().getId() : null;
+
+        return new SectionResponseDTO(
+                section.getId(),
+                section.getTitle(),
+                section.getDescription(),
+                section.getOrderIndex(),
+                modules,
+                section.isSkipRequiresTest(),
+                skipTestModuleId,
+                section.getSkipPassThreshold()
+        );
     }
 }

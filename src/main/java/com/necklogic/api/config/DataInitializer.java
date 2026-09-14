@@ -24,556 +24,1280 @@ public class DataInitializer {
                 moduleRepository.deleteAll();
 
                 Track officialTrack = trackRepository.save(
-                        new Track("Trilha Oficial", "Trilha padrão do NeckLogic, mantida pela equipe.", null, true, true)
+                        new Track("Trilha Oficial", "Do zero à improvisação: domine o braço, a harmonia e as escalas necessárias para tocar de ouvido e compor.", null, true, true)
                 );
 
-                Section secNavigation = new Section("Navigation & Anchors", "Pare de se perder no braço.", 1);
-                Section secIntervals = new Section("Intervals", "A geometria da música.", 2);
-                Section secRhythm = new Section("Rhythm & Feel", "Onde colocar cada nota.", 3);
-                Section secQa = new Section("QA - Tipos de Exercício", "Trilha de teste para validar todos os tipos de exercício implementados.", 4);
+                Section sec01FundamentosBraco = new Section("Fundamentos do Braço", "Domine cada nota do braço, casa por casa.", 1);
+                Section sec02TeoriaEssencial = new Section("Teoria Musical Essencial", "A geometria da música: intervalos, escalas e tonalidades.", 2);
+                Section sec03AcordesAbertos = new Section("Acordes Abertos e Power Chords", "Seus primeiros acordes e progressões.", 3);
+                Section sec04CampoHarmonico = new Section("Campo Harmônico e Progressões", "Como os acordes se conectam dentro de um tom.", 4);
+                Section sec05Caged = new Section("Sistema CAGED", "O mesmo acorde, cinco posições pelo braço inteiro.", 5);
+                Section sec06Triades = new Section("Tríades e Inversões pelo Braço", "Acordes compactos em qualquer região do braço.", 6);
+                Section sec07Pentatonica = new Section("Escalas Pentatônicas e Blues", "A base de todo solo: pentatônica e blue note.", 7);
+                Section sec08EscalaModos = new Section("Escala Maior e Modos", "Os 7 modos e como usá-los para improvisar.", 8);
+                Section sec09Arpejos = new Section("Arpejos e Acordes de 7ª", "Tétrades e arpejos para um improviso mais rico.", 9);
+                Section sec10EscalasMenores = new Section("Escala Menor Natural, Harmônica e Melódica", "As três faces da tonalidade menor.", 10);
+                Section sec11Improvisacao = new Section("Improvisação e Vocabulário", "Construindo frases musicais de verdade.", 11);
+                Section sec12Composicao = new Section("Composição e Forma Musical", "Escreva sua própria música do zero.", 12);
+                Section secQa = new Section("QA - Tipos de Exercício", "Trilha de teste para validar todos os tipos de exercício implementados.", 13);
 
-                for (Section section : List.of(secNavigation, secIntervals, secRhythm, secQa)) {
+                for (Section section : List.of(
+                        sec01FundamentosBraco, sec02TeoriaEssencial, sec03AcordesAbertos, sec04CampoHarmonico,
+                        sec05Caged, sec06Triades, sec07Pentatonica, sec08EscalaModos, sec09Arpejos,
+                        sec10EscalasMenores, sec11Improvisacao, sec12Composicao, secQa
+                )) {
                     section.setTrack(officialTrack);
                 }
 
-                sectionRepository.saveAll(List.of(secNavigation, secIntervals, secRhythm, secQa));
-                String contentFretboardBasics = """
-                    [
-                        {
-                            "type": "THEORY",
-                            "title": "As Cordas",
-                            "text": "O braço do instrumento funciona como um mapa de coordenadas. A organização vertical começa na 1ª corda (mais aguda) até a 6ª corda (mais grave).",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 0
-                                    },
-                                    {
-                                        "string": 5,
-                                        "fret": 0
-                                    },
-                                    {
-                                        "string": 4,
-                                        "fret": 0
-                                    },
-                                    {
-                                        "string": 3,
-                                        "fret": 0
-                                    },
-                                    {
-                                        "string": 2,
-                                        "fret": 0
-                                    },
-                                    {
-                                        "string": 1,
-                                        "fret": 0
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "Corda Grave",
-                            "question": "Selecione a 6ª corda solta.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 0
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "Corda Aguda",
-                            "question": "Selecione a 1ª corda solta.",
-                            "targetShape": [
-                                {
-                                    "string": 1,
-                                    "fret": 0
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "As Casas e Trastes",
-                            "text": "A navegação horizontal ocorre pelas casas (frets). Avançar 1 casa eleva a nota em 1 semitom. As marcações (inlays) nas casas 3, 5, 7 e 9 servem como pontos de referência visual.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": []
-                            }
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "Cruzando Informações",
-                            "question": "Localize a 6ª corda, casa 5 (segunda marcação).",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 5
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "Marcadores Centrais",
-                            "text": "As marcações ajudam a visualizar o braço por inteiro. A marcação da casa 7, por exemplo, alinha visualmente as notas em todas as cordas de forma rápida.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 5,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 4,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 3,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 2,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 1,
-                                        "fret": 7
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "Localização Rápida",
-                            "question": "Navegue diretamente para a 3ª corda, casa 7.",
-                            "targetShape": [
-                                {
-                                    "string": 3,
-                                    "fret": 7
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        }
-                    ]
-                """;
+                sectionRepository.saveAll(List.of(
+                        sec01FundamentosBraco, sec02TeoriaEssencial, sec03AcordesAbertos, sec04CampoHarmonico,
+                        sec05Caged, sec06Triades, sec07Pentatonica, sec08EscalaModos, sec09Arpejos,
+                        sec10EscalasMenores, sec11Improvisacao, sec12Composicao, secQa
+                ));
 
-                String contentString6Natural = """
+                // Seção 1 - Módulo 1: Corda Mi grave (casas 0-5)
+                String contentSec01Mod01 = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "O Padrão de 1 Tom",
-                            "text": "As notas naturais são A, B, C, D, E, F, G. Na guitarra, a distância de 1 Tom equivale a pular 1 casa inteira (avançar 2 casas).",
+                            "title": "Corda Mi Grave: Primeiras Notas",
+                            "text": "A 6ª corda (a mais grave) solta é a nota E. Entre as casas 0 e 5, encontramos apenas 4 notas naturais: E (solta), F (casa 1), G (casa 3) e A (casa 5). Repare que de E para F é apenas 1 casa de distância (semitom), enquanto as outras distâncias são de 2 casas (tom).",
                             "illustration": {
                                 "kind": "fretboard",
                                 "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 3
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 5
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 7
-                                    }
+                                    { "string": 6, "fret": 0 },
+                                    { "string": 6, "fret": 1 },
+                                    { "string": 6, "fret": 3 },
+                                    { "string": 6, "fret": 5 }
                                 ]
                             }
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota G",
-                            "question": "Localize a nota G na 6ª corda (primeira marcação).",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 3
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota E (Corda Solta)",
+                            "question": "Selecione a 6ª corda solta (E).",
+                            "targetShape": [ { "string": 6, "fret": 0 } ]
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota A",
-                            "question": "Avance 1 Tom a partir do G para localizar a nota A (segunda marcação).",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 5
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "Distância de Semitom: E e F",
-                            "text": "As notas E e F possuem apenas 1 Semitom de distância (casas vizinhas). Como a 6ª corda solta é E, a casa 1 é automaticamente o F.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 0
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 1
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
                             "title": "Nota F",
-                            "question": "Localize a nota F na 6ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 1
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "question": "A partir do E, avance 1 casa (semitom) e localize a nota F.",
+                            "targetShape": [ { "string": 6, "fret": 1 } ]
                         },
                         {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota G",
+                            "question": "A partir do F, avance 1 tom (2 casas) e localize a nota G.",
+                            "targetShape": [ { "string": 6, "fret": 3 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota A",
+                            "question": "A partir do G, avance mais 1 tom e localize a nota A.",
+                            "targetShape": [ { "string": 6, "fret": 5 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (6ª corda, casa 3)?",
+                            "options": [ "F", "F#", "G", "G#" ],
+                            "correctAnswer": "G",
+                            "markedPosition": { "string": 6, "fret": 3 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: As 4 Notas",
+                            "question": "Selecione, na 6ª corda, uma ocorrência de cada nota aprendida nesta aula: E, F, G e A.",
+                            "targetNotes": [ "E", "F", "G", "A" ]
+                        }
+                    ]
+                """;
+
+                // Seção 1 - Módulo 2: Corda Mi grave (casas 5-12)
+                String contentSec01Mod02 = """
+                    [
+                        {
                             "type": "THEORY",
-                            "title": "Distância de Semitom: B e C",
-                            "text": "Assim como E e F, as notas B e C distam apenas 1 Semitom. Sabendo que o B está na casa 7, o C estará na casa seguinte.",
+                            "title": "Corda Mi Grave: Casas 5 a 12",
+                            "text": "Continuando a partir do A (casa 5), encontramos mais 3 notas naturais até a casa 12: B (casa 7), C (casa 8) e D (casa 10). Repare que, assim como E-F, o par B-C também tem apenas 1 semitom de distância. Na casa 12 chegamos na oitava do E: a mesma nota da corda solta, um oitava acima.",
                             "illustration": {
                                 "kind": "fretboard",
                                 "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 8
-                                    }
+                                    { "string": 6, "fret": 5 },
+                                    { "string": 6, "fret": 7 },
+                                    { "string": 6, "fret": 8 },
+                                    { "string": 6, "fret": 10 },
+                                    { "string": 6, "fret": 12 }
                                 ]
                             }
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota C",
-                            "question": "Localize a nota C na 6ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 8
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota B",
+                            "question": "A partir do A (casa 5), avance 1 tom (2 casas) e localize a nota B.",
+                            "targetShape": [ { "string": 6, "fret": 7 } ]
+                        },
+                        {
+                            "type": "THEORY",
+                            "title": "Semitom: B e C",
+                            "text": "Assim como E e F, as notas B e C distam apenas 1 semitom (1 casa). Sabendo que o B está na casa 7, o C estará bem ao lado, na casa seguinte.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 6, "fret": 7 },
+                                    { "string": 6, "fret": 8 }
+                                ]
+                            }
                         },
                         {
                             "type": "DRILL",
-                            "title": "Dedução de 1 Tom",
-                            "question": "Aplicando a regra de 1 Tom a partir do C, localize a nota D.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 10
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota C",
+                            "question": "Localize a nota C, 1 semitom acima do B.",
+                            "targetShape": [ { "string": 6, "fret": 8 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota D",
+                            "question": "A partir do C, avance 1 tom (2 casas) e localize a nota D.",
+                            "targetShape": [ { "string": 6, "fret": 10 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava do E",
+                            "question": "A partir do D, avance 1 tom e localize a oitava do E (a mesma nota da corda solta, uma oitava acima).",
+                            "targetShape": [ { "string": 6, "fret": 12 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (6ª corda, casa 10)?",
+                            "options": [ "C", "C#", "D", "D#" ],
+                            "correctAnswer": "D",
+                            "markedPosition": { "string": 6, "fret": 10 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Casas 5 a 12",
+                            "question": "Selecione, na 6ª corda, uma ocorrência de cada nota aprendida nesta aula: B, C e D.",
+                            "targetNotes": [ "B", "C", "D" ]
                         }
                     ]
                 """;
 
-                String contentString6Accidentals = """
+                // Seção 1 - Módulo 3: Tablatura - revisão da corda Mi grave
+                String contentSec01Mod03 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Lendo Tablatura",
+                            "text": "Uma tablatura (tab) representa cada corda do instrumento como uma linha horizontal, da mais grave (embaixo) à mais aguda (em cima). Os números escritos sobre cada linha indicam a casa a ser tocada naquela corda. Vamos praticar lendo e tocando sequências apenas na 6ª corda, revisando todas as notas das últimas duas aulas."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: E-F-G-A",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 0 }, { "string": 6, "fret": 1 }, { "string": 6, "fret": 3 }, { "string": 6, "fret": 5 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: B-C-D-E",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 7 }, { "string": 6, "fret": 8 }, { "string": 6, "fret": 10 }, { "string": 6, "fret": 12 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 3: Frase Melódica",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 0 }, { "string": 6, "fret": 3 }, { "string": 6, "fret": 7 },
+                                { "string": 6, "fret": 12 }, { "string": 6, "fret": 7 }, { "string": 6, "fret": 3 }, { "string": 6, "fret": 0 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 4: Escala Completa Descendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima, revisando todas as notas da corda Mi grave.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 12 }, { "string": 6, "fret": 10 }, { "string": 6, "fret": 8 }, { "string": 6, "fret": 7 },
+                                { "string": 6, "fret": 5 }, { "string": 6, "fret": 3 }, { "string": 6, "fret": 1 }, { "string": 6, "fret": 0 }
+                            ]
+                        }
+                    ]
+                """;
+
+                // Seção 1 - Módulo 4: Corda Lá (casas 0-5)
+                String contentSec01Mod04 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Lá: Primeiras Notas",
+                            "text": "A 5ª corda solta é a nota A. Entre as casas 0 e 5, encontramos as notas A (solta), B (casa 2), C (casa 3) e D (casa 5). Assim como em E-F na corda Mi grave, o par B-C aqui também tem apenas 1 semitom de distância.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 5, "fret": 0 },
+                                    { "string": 5, "fret": 2 },
+                                    { "string": 5, "fret": 3 },
+                                    { "string": 5, "fret": 5 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota A (Corda Solta)",
+                            "question": "Selecione a 5ª corda solta (A).",
+                            "targetShape": [ { "string": 5, "fret": 0 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota B",
+                            "question": "A partir do A, avance 1 tom (2 casas) e localize a nota B.",
+                            "targetShape": [ { "string": 5, "fret": 2 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota C",
+                            "question": "A partir do B, avance 1 semitom (1 casa) e localize a nota C.",
+                            "targetShape": [ { "string": 5, "fret": 3 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota D",
+                            "question": "A partir do C, avance 1 tom e localize a nota D.",
+                            "targetShape": [ { "string": 5, "fret": 5 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (5ª corda, casa 3)?",
+                            "options": [ "B", "B#", "C", "C#" ],
+                            "correctAnswer": "C",
+                            "markedPosition": { "string": 5, "fret": 3 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: As 4 Notas",
+                            "question": "Selecione, na 5ª corda, uma ocorrência de cada nota aprendida nesta aula: A, B, C e D.",
+                            "targetNotes": [ "A", "B", "C", "D" ]
+                        }
+                    ]
+                """;
+
+                // Seção 1 - Módulo 5: Corda Lá (casas 5-12)
+                String contentSec01Mod05 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Lá: Casas 5 a 12",
+                            "text": "Continuando a partir do D (casa 5), encontramos mais 3 notas naturais até a casa 12: E (casa 7), F (casa 8) e G (casa 10). Assim como em B-C, o par E-F aqui também tem apenas 1 semitom de distância. Na casa 12 chegamos na oitava do A: a mesma nota da corda solta, uma oitava acima.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 5, "fret": 5 },
+                                    { "string": 5, "fret": 7 },
+                                    { "string": 5, "fret": 8 },
+                                    { "string": 5, "fret": 10 },
+                                    { "string": 5, "fret": 12 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota E",
+                            "question": "A partir do D (casa 5), avance 1 tom (2 casas) e localize a nota E.",
+                            "targetShape": [ { "string": 5, "fret": 7 } ]
+                        },
+                        {
+                            "type": "THEORY",
+                            "title": "Semitom: E e F",
+                            "text": "Assim como B e C, as notas E e F distam apenas 1 semitom (1 casa). Sabendo que o E está na casa 7, o F estará bem ao lado, na casa seguinte.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 5, "fret": 7 },
+                                    { "string": 5, "fret": 8 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota F",
+                            "question": "Localize a nota F, 1 semitom acima do E.",
+                            "targetShape": [ { "string": 5, "fret": 8 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota G",
+                            "question": "A partir do F, avance 1 tom (2 casas) e localize a nota G.",
+                            "targetShape": [ { "string": 5, "fret": 10 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava do A",
+                            "question": "A partir do G, avance 1 tom e localize a oitava do A (a mesma nota da corda solta, uma oitava acima).",
+                            "targetShape": [ { "string": 5, "fret": 12 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (5ª corda, casa 10)?",
+                            "options": [ "F", "F#", "G", "G#" ],
+                            "correctAnswer": "G",
+                            "markedPosition": { "string": 5, "fret": 10 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Casas 5 a 12",
+                            "question": "Selecione, na 5ª corda, uma ocorrência de cada nota aprendida nesta aula: E, F e G.",
+                            "targetNotes": [ "E", "F", "G" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod06 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Tablatura: Corda Lá",
+                            "text": "Vamos revisar a corda Lá com tablatura, praticando as notas aprendidas nas últimas duas aulas."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: A-B-C-D",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 5, "fret": 0 }, { "string": 5, "fret": 2 }, { "string": 5, "fret": 3 }, { "string": 5, "fret": 5 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: E-F-G-A",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 5, "fret": 7 }, { "string": 5, "fret": 8 }, { "string": 5, "fret": 10 }, { "string": 5, "fret": 12 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 3: Frase Melódica",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 5, "fret": 0 }, { "string": 5, "fret": 3 }, { "string": 5, "fret": 7 },
+                                { "string": 5, "fret": 12 }, { "string": 5, "fret": 7 }, { "string": 5, "fret": 3 }, { "string": 5, "fret": 0 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 4: Escala Completa Descendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima, revisando todas as notas da corda Lá.",
+                            "targetSequence": [
+                                { "string": 5, "fret": 12 }, { "string": 5, "fret": 10 }, { "string": 5, "fret": 8 }, { "string": 5, "fret": 7 },
+                                { "string": 5, "fret": 5 }, { "string": 5, "fret": 3 }, { "string": 5, "fret": 2 }, { "string": 5, "fret": 0 }
+                            ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod07 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Ré: Primeiras Notas",
+                            "text": "A 4ª corda solta é a nota D. Entre as casas 0 e 5, encontramos as notas D (solta), E (casa 2), F (casa 3) e G (casa 5). O par E-F, como em outras cordas, tem apenas 1 semitom de distância.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 4, "fret": 0 },
+                                    { "string": 4, "fret": 2 },
+                                    { "string": 4, "fret": 3 },
+                                    { "string": 4, "fret": 5 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota D (Corda Solta)",
+                            "question": "Selecione a 4ª corda solta (D).",
+                            "targetShape": [ { "string": 4, "fret": 0 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota E",
+                            "question": "A partir do D, avance 1 tom (2 casas) e localize a nota E.",
+                            "targetShape": [ { "string": 4, "fret": 2 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota F",
+                            "question": "A partir do E, avance 1 semitom (1 casa) e localize a nota F.",
+                            "targetShape": [ { "string": 4, "fret": 3 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota G",
+                            "question": "A partir do F, avance 1 tom e localize a nota G.",
+                            "targetShape": [ { "string": 4, "fret": 5 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (4ª corda, casa 3)?",
+                            "options": [ "E", "E#", "F", "F#" ],
+                            "correctAnswer": "F",
+                            "markedPosition": { "string": 4, "fret": 3 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: As 4 Notas",
+                            "question": "Selecione, na 4ª corda, uma ocorrência de cada nota aprendida nesta aula: D, E, F e G.",
+                            "targetNotes": [ "D", "E", "F", "G" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod08 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Ré: Casas 5 a 12",
+                            "text": "Continuando a partir do G (casa 5), encontramos mais 3 notas naturais até a casa 12: A (casa 7), B (casa 9) e C (casa 10). O par B-C tem apenas 1 semitom de distância. Na casa 12 chegamos na oitava do D: a mesma nota da corda solta, uma oitava acima.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 4, "fret": 5 },
+                                    { "string": 4, "fret": 7 },
+                                    { "string": 4, "fret": 9 },
+                                    { "string": 4, "fret": 10 },
+                                    { "string": 4, "fret": 12 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota A",
+                            "question": "A partir do G (casa 5), avance 1 tom (2 casas) e localize a nota A.",
+                            "targetShape": [ { "string": 4, "fret": 7 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota B",
+                            "question": "A partir do A, avance 1 tom e localize a nota B.",
+                            "targetShape": [ { "string": 4, "fret": 9 } ]
+                        },
+                        {
+                            "type": "THEORY",
+                            "title": "Semitom: B e C",
+                            "text": "Assim como em outras cordas, as notas B e C aqui também distam apenas 1 semitom (1 casa). Sabendo que o B está na casa 9, o C estará bem ao lado, na casa seguinte.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 4, "fret": 9 },
+                                    { "string": 4, "fret": 10 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota C",
+                            "question": "Localize a nota C, 1 semitom acima do B.",
+                            "targetShape": [ { "string": 4, "fret": 10 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava do D",
+                            "question": "A partir do C, avance 1 tom e localize a oitava do D (a mesma nota da corda solta, uma oitava acima).",
+                            "targetShape": [ { "string": 4, "fret": 12 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (4ª corda, casa 10)?",
+                            "options": [ "B", "B#", "C", "C#" ],
+                            "correctAnswer": "C",
+                            "markedPosition": { "string": 4, "fret": 10 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Casas 5 a 12",
+                            "question": "Selecione, na 4ª corda, uma ocorrência de cada nota aprendida nesta aula: A, B e C.",
+                            "targetNotes": [ "A", "B", "C" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod09 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Tablatura: Corda Ré",
+                            "text": "Vamos revisar a corda Ré com tablatura, praticando as notas aprendidas nas últimas duas aulas."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: D-E-F-G",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 4, "fret": 0 }, { "string": 4, "fret": 2 }, { "string": 4, "fret": 3 }, { "string": 4, "fret": 5 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: A-B-C-D",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 4, "fret": 7 }, { "string": 4, "fret": 9 }, { "string": 4, "fret": 10 }, { "string": 4, "fret": 12 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 3: Frase Melódica",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 4, "fret": 0 }, { "string": 4, "fret": 3 }, { "string": 4, "fret": 7 },
+                                { "string": 4, "fret": 12 }, { "string": 4, "fret": 7 }, { "string": 4, "fret": 3 }, { "string": 4, "fret": 0 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 4: Escala Completa Descendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima, revisando todas as notas da corda Ré.",
+                            "targetSequence": [
+                                { "string": 4, "fret": 12 }, { "string": 4, "fret": 10 }, { "string": 4, "fret": 9 }, { "string": 4, "fret": 7 },
+                                { "string": 4, "fret": 5 }, { "string": 4, "fret": 3 }, { "string": 4, "fret": 2 }, { "string": 4, "fret": 0 }
+                            ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod10 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Sol: Primeiras Notas",
+                            "text": "A 3ª corda solta é a nota G. Entre as casas 0 e 5, encontramos as notas G (solta), A (casa 2), B (casa 4) e C (casa 5). O par B-C tem apenas 1 semitom de distância.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 3, "fret": 0 },
+                                    { "string": 3, "fret": 2 },
+                                    { "string": 3, "fret": 4 },
+                                    { "string": 3, "fret": 5 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota G (Corda Solta)",
+                            "question": "Selecione a 3ª corda solta (G).",
+                            "targetShape": [ { "string": 3, "fret": 0 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota A",
+                            "question": "A partir do G, avance 1 tom (2 casas) e localize a nota A.",
+                            "targetShape": [ { "string": 3, "fret": 2 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota B",
+                            "question": "A partir do A, avance 1 tom e localize a nota B.",
+                            "targetShape": [ { "string": 3, "fret": 4 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota C",
+                            "question": "A partir do B, avance 1 semitom (1 casa) e localize a nota C.",
+                            "targetShape": [ { "string": 3, "fret": 5 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (3ª corda, casa 4)?",
+                            "options": [ "A#", "B", "C", "C#" ],
+                            "correctAnswer": "B",
+                            "markedPosition": { "string": 3, "fret": 4 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: As 4 Notas",
+                            "question": "Selecione, na 3ª corda, uma ocorrência de cada nota aprendida nesta aula: G, A, B e C.",
+                            "targetNotes": [ "G", "A", "B", "C" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod11 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Sol: Casas 5 a 12",
+                            "text": "Continuando a partir do C (casa 5), encontramos mais 3 notas naturais até a casa 12: D (casa 7), E (casa 9) e F (casa 10). O par E-F tem apenas 1 semitom de distância. Na casa 12 chegamos na oitava do G: a mesma nota da corda solta, uma oitava acima.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 3, "fret": 5 },
+                                    { "string": 3, "fret": 7 },
+                                    { "string": 3, "fret": 9 },
+                                    { "string": 3, "fret": 10 },
+                                    { "string": 3, "fret": 12 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota D",
+                            "question": "A partir do C (casa 5), avance 1 tom (2 casas) e localize a nota D.",
+                            "targetShape": [ { "string": 3, "fret": 7 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota E",
+                            "question": "A partir do D, avance 1 tom e localize a nota E.",
+                            "targetShape": [ { "string": 3, "fret": 9 } ]
+                        },
+                        {
+                            "type": "THEORY",
+                            "title": "Semitom: E e F",
+                            "text": "Assim como em outras cordas, as notas E e F aqui também distam apenas 1 semitom (1 casa). Sabendo que o E está na casa 9, o F estará bem ao lado, na casa seguinte.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 3, "fret": 9 },
+                                    { "string": 3, "fret": 10 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota F",
+                            "question": "Localize a nota F, 1 semitom acima do E.",
+                            "targetShape": [ { "string": 3, "fret": 10 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava do G",
+                            "question": "A partir do F, avance 1 tom e localize a oitava do G (a mesma nota da corda solta, uma oitava acima).",
+                            "targetShape": [ { "string": 3, "fret": 12 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (3ª corda, casa 7)?",
+                            "options": [ "C#", "D", "D#", "E" ],
+                            "correctAnswer": "D",
+                            "markedPosition": { "string": 3, "fret": 7 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Casas 5 a 12",
+                            "question": "Selecione, na 3ª corda, uma ocorrência de cada nota aprendida nesta aula: D, E e F.",
+                            "targetNotes": [ "D", "E", "F" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod12 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Tablatura: Corda Sol",
+                            "text": "Vamos revisar a corda Sol com tablatura, praticando as notas aprendidas nas últimas duas aulas."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: G-A-B-C",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 3, "fret": 0 }, { "string": 3, "fret": 2 }, { "string": 3, "fret": 4 }, { "string": 3, "fret": 5 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: D-E-F-G",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 3, "fret": 7 }, { "string": 3, "fret": 9 }, { "string": 3, "fret": 10 }, { "string": 3, "fret": 12 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 3: Frase Melódica",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 3, "fret": 0 }, { "string": 3, "fret": 4 }, { "string": 3, "fret": 7 },
+                                { "string": 3, "fret": 12 }, { "string": 3, "fret": 7 }, { "string": 3, "fret": 4 }, { "string": 3, "fret": 0 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 4: Escala Completa Descendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima, revisando todas as notas da corda Sol.",
+                            "targetSequence": [
+                                { "string": 3, "fret": 12 }, { "string": 3, "fret": 10 }, { "string": 3, "fret": 9 }, { "string": 3, "fret": 7 },
+                                { "string": 3, "fret": 5 }, { "string": 3, "fret": 4 }, { "string": 3, "fret": 2 }, { "string": 3, "fret": 0 }
+                            ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod13 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Si: Primeiras Notas",
+                            "text": "A 2ª corda solta é a nota B. Entre as casas 0 e 5, encontramos as notas B (solta), C (casa 1), D (casa 3) e E (casa 5). O par B-C tem apenas 1 semitom de distância, então logo na primeira casa já mudamos de nota.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 2, "fret": 0 },
+                                    { "string": 2, "fret": 1 },
+                                    { "string": 2, "fret": 3 },
+                                    { "string": 2, "fret": 5 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota B (Corda Solta)",
+                            "question": "Selecione a 2ª corda solta (B).",
+                            "targetShape": [ { "string": 2, "fret": 0 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota C",
+                            "question": "A partir do B, avance 1 semitom (1 casa) e localize a nota C.",
+                            "targetShape": [ { "string": 2, "fret": 1 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota D",
+                            "question": "A partir do C, avance 1 tom (2 casas) e localize a nota D.",
+                            "targetShape": [ { "string": 2, "fret": 3 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota E",
+                            "question": "A partir do D, avance 1 tom e localize a nota E.",
+                            "targetShape": [ { "string": 2, "fret": 5 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (2ª corda, casa 1)?",
+                            "options": [ "A#", "B", "C", "C#" ],
+                            "correctAnswer": "C",
+                            "markedPosition": { "string": 2, "fret": 1 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: As 4 Notas",
+                            "question": "Selecione, na 2ª corda, uma ocorrência de cada nota aprendida nesta aula: B, C, D e E.",
+                            "targetNotes": [ "B", "C", "D", "E" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod14 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Si: Casas 5 a 12",
+                            "text": "Continuando a partir do E (casa 5), encontramos mais 3 notas naturais até a casa 12: F (casa 6), G (casa 8) e A (casa 10). Assim como B-C, o par E-F também tem apenas 1 semitom de distância, então logo na próxima casa já mudamos de nota. Na casa 12 chegamos na oitava do B: a mesma nota da corda solta, uma oitava acima.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 2, "fret": 5 },
+                                    { "string": 2, "fret": 6 },
+                                    { "string": 2, "fret": 8 },
+                                    { "string": 2, "fret": 10 },
+                                    { "string": 2, "fret": 12 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota F",
+                            "question": "A partir do E (casa 5), avance 1 semitom (1 casa) e localize a nota F.",
+                            "targetShape": [ { "string": 2, "fret": 6 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota G",
+                            "question": "A partir do F, avance 1 tom (2 casas) e localize a nota G.",
+                            "targetShape": [ { "string": 2, "fret": 8 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota A",
+                            "question": "A partir do G, avance 1 tom e localize a nota A.",
+                            "targetShape": [ { "string": 2, "fret": 10 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava do B",
+                            "question": "A partir do A, avance 1 tom e localize a oitava do B (a mesma nota da corda solta, uma oitava acima).",
+                            "targetShape": [ { "string": 2, "fret": 12 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (2ª corda, casa 8)?",
+                            "options": [ "F#", "G", "G#", "A" ],
+                            "correctAnswer": "G",
+                            "markedPosition": { "string": 2, "fret": 8 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Casas 5 a 12",
+                            "question": "Selecione, na 2ª corda, uma ocorrência de cada nota aprendida nesta aula: F, G e A.",
+                            "targetNotes": [ "F", "G", "A" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod15 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Tablatura: Corda Si",
+                            "text": "Vamos revisar a corda Si com tablatura, praticando as notas aprendidas nas últimas duas aulas."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: B-C-D-E",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 2, "fret": 0 }, { "string": 2, "fret": 1 }, { "string": 2, "fret": 3 }, { "string": 2, "fret": 5 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: F-G-A-B",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 2, "fret": 6 }, { "string": 2, "fret": 8 }, { "string": 2, "fret": 10 }, { "string": 2, "fret": 12 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 3: Frase Melódica",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 2, "fret": 0 }, { "string": 2, "fret": 3 }, { "string": 2, "fret": 6 },
+                                { "string": 2, "fret": 12 }, { "string": 2, "fret": 6 }, { "string": 2, "fret": 3 }, { "string": 2, "fret": 0 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 4: Escala Completa Descendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima, revisando todas as notas da corda Si.",
+                            "targetSequence": [
+                                { "string": 2, "fret": 12 }, { "string": 2, "fret": 10 }, { "string": 2, "fret": 8 }, { "string": 2, "fret": 6 },
+                                { "string": 2, "fret": 5 }, { "string": 2, "fret": 3 }, { "string": 2, "fret": 1 }, { "string": 2, "fret": 0 }
+                            ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod16 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Mi Agudo: Primeiras Notas",
+                            "text": "A 1ª corda (a mais aguda) solta também é a nota E, assim como a 6ª corda (a mais grave) — só que uma oitava mais alta. Por isso, o padrão de casas é idêntico ao que você já aprendeu: E (solta), F (casa 1), G (casa 3) e A (casa 5).",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 1, "fret": 0 },
+                                    { "string": 1, "fret": 1 },
+                                    { "string": 1, "fret": 3 },
+                                    { "string": 1, "fret": 5 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota E (Corda Solta)",
+                            "question": "Selecione a 1ª corda solta (E).",
+                            "targetShape": [ { "string": 1, "fret": 0 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota F",
+                            "question": "A partir do E, avance 1 casa (semitom) e localize a nota F.",
+                            "targetShape": [ { "string": 1, "fret": 1 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota G",
+                            "question": "A partir do F, avance 1 tom (2 casas) e localize a nota G.",
+                            "targetShape": [ { "string": 1, "fret": 3 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota A",
+                            "question": "A partir do G, avance mais 1 tom e localize a nota A.",
+                            "targetShape": [ { "string": 1, "fret": 5 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (1ª corda, casa 3)?",
+                            "options": [ "F", "F#", "G", "G#" ],
+                            "correctAnswer": "G",
+                            "markedPosition": { "string": 1, "fret": 3 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: As 4 Notas",
+                            "question": "Selecione, na 1ª corda, uma ocorrência de cada nota aprendida nesta aula: E, F, G e A.",
+                            "targetNotes": [ "E", "F", "G", "A" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod17 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Corda Mi Agudo: Casas 5 a 12",
+                            "text": "Continuando a partir do A (casa 5), o padrão se repete igual à corda Mi grave: B (casa 7), C (casa 8) e D (casa 10), com o mesmo semitom entre B e C. Na casa 12 chegamos na oitava do E.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 1, "fret": 5 },
+                                    { "string": 1, "fret": 7 },
+                                    { "string": 1, "fret": 8 },
+                                    { "string": 1, "fret": 10 },
+                                    { "string": 1, "fret": 12 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota B",
+                            "question": "A partir do A (casa 5), avance 1 tom (2 casas) e localize a nota B.",
+                            "targetShape": [ { "string": 1, "fret": 7 } ]
+                        },
+                        {
+                            "type": "THEORY",
+                            "title": "Semitom: B e C",
+                            "text": "Mais uma vez, B e C distam apenas 1 semitom (1 casa). Sabendo que o B está na casa 7, o C estará bem ao lado, na casa seguinte.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 1, "fret": 7 },
+                                    { "string": 1, "fret": 8 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota C",
+                            "question": "Localize a nota C, 1 semitom acima do B.",
+                            "targetShape": [ { "string": 1, "fret": 8 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Nota D",
+                            "question": "A partir do C, avance 1 tom (2 casas) e localize a nota D.",
+                            "targetShape": [ { "string": 1, "fret": 10 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava do E",
+                            "question": "A partir do D, avance 1 tom e localize a oitava do E (a mesma nota da corda solta, uma oitava acima).",
+                            "targetShape": [ { "string": 1, "fret": 12 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (1ª corda, casa 10)?",
+                            "options": [ "C", "C#", "D", "D#" ],
+                            "correctAnswer": "D",
+                            "markedPosition": { "string": 1, "fret": 10 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Casas 5 a 12",
+                            "question": "Selecione, na 1ª corda, uma ocorrência de cada nota aprendida nesta aula: B, C e D.",
+                            "targetNotes": [ "B", "C", "D" ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod18 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Tablatura: Corda Mi Agudo",
+                            "text": "Vamos revisar a corda Mi agudo com tablatura, praticando as notas aprendidas nas últimas duas aulas."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: E-F-G-A",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 1, "fret": 0 }, { "string": 1, "fret": 1 }, { "string": 1, "fret": 3 }, { "string": 1, "fret": 5 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: B-C-D-E",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 1, "fret": 7 }, { "string": 1, "fret": 8 }, { "string": 1, "fret": 10 }, { "string": 1, "fret": 12 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 3: Frase Melódica",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 1, "fret": 0 }, { "string": 1, "fret": 3 }, { "string": 1, "fret": 7 },
+                                { "string": 1, "fret": 12 }, { "string": 1, "fret": 7 }, { "string": 1, "fret": 3 }, { "string": 1, "fret": 0 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 4: Escala Completa Descendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima, revisando todas as notas da corda Mi agudo.",
+                            "targetSequence": [
+                                { "string": 1, "fret": 12 }, { "string": 1, "fret": 10 }, { "string": 1, "fret": 8 }, { "string": 1, "fret": 7 },
+                                { "string": 1, "fret": 5 }, { "string": 1, "fret": 3 }, { "string": 1, "fret": 1 }, { "string": 1, "fret": 0 }
+                            ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod19 = """
                     [
                         {
                             "type": "THEORY",
                             "title": "O Sustenido (#)",
-                            "text": "O sustenido eleva a nota em 1 semitom, o que significa avançar 1 casa em direção ao corpo da guitarra.",
+                            "text": "O sustenido eleva a nota em 1 semitom, ou seja, avança 1 casa em direção ao corpo do instrumento. Vamos praticar sustenidos nas 3 cordas mais graves: Mi grave, Lá e Ré.",
                             "illustration": {
                                 "kind": "fretboard",
                                 "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 1
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 2
-                                    }
+                                    { "string": 6, "fret": 1 },
+                                    { "string": 6, "fret": 2 }
                                 ]
                             }
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota F#",
-                            "question": "Encontre o F natural e avance 1 semitom para marcar o F#.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 2
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "F# na Corda Mi Grave",
+                            "question": "Encontre o F natural na 6ª corda e avance 1 semitom para marcar o F#.",
+                            "targetShape": [ { "string": 6, "fret": 2 } ]
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota G#",
-                            "question": "Encontre a nota G e avance 1 semitom para marcar o G#.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 4
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "C# na Corda Lá",
+                            "question": "Encontre o C natural na 5ª corda e avance 1 semitom para marcar o C#.",
+                            "targetShape": [ { "string": 5, "fret": 4 } ]
                         },
                         {
                             "type": "THEORY",
                             "title": "O Bemol (b)",
-                            "text": "O bemol abaixa a nota em 1 semitom, o que significa recuar 1 casa em direção à mão (headstock) do instrumento.",
+                            "text": "O bemol abaixa a nota em 1 semitom, ou seja, recua 1 casa em direção à mão (headstock) do instrumento.",
                             "illustration": {
                                 "kind": "fretboard",
                                 "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 6
-                                    }
+                                    { "string": 5, "fret": 2 },
+                                    { "string": 5, "fret": 1 }
                                 ]
                             }
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota Bb",
-                            "question": "Encontre o B natural e recue 1 semitom para marcar o Bb.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 6
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "Enarmonia",
-                            "text": "Avançar de G (G#) ou recuar de A (Ab) leva à mesma casa. Enarmonia ocorre quando a mesma posição física possui dois nomes dependendo da escala.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 3
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 4
-                                    },
-                                    {
-                                        "string": 6,
-                                        "fret": 5
-                                    }
-                                ]
-                            }
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Bb na Corda Lá",
+                            "question": "Encontre o B natural na 5ª corda e recue 1 semitom para marcar o Bb.",
+                            "targetShape": [ { "string": 5, "fret": 1 } ]
                         },
                         {
                             "type": "DRILL",
-                            "title": "Identificando Gb",
-                            "question": "Localize a nota Gb. Dica: parta da nota G natural e recue 1 semitom.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 2
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Eb na Corda Ré",
+                            "question": "Encontre o E natural na 4ª corda e recue 1 semitom para marcar o Eb.",
+                            "targetShape": [ { "string": 4, "fret": 1 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (6ª corda, casa 2)?",
+                            "options": [ "F", "F#", "G", "G#" ],
+                            "correctAnswer": "F#",
+                            "markedPosition": { "string": 6, "fret": 2 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Acidentes nas Cordas Graves",
+                            "question": "Marque, ao mesmo tempo, o F# na 6ª corda e o C# na 5ª corda.",
+                            "targetShape": [ { "string": 6, "fret": 2 }, { "string": 5, "fret": 4 } ]
                         }
                     ]
                 """;
 
-                String contentString5Natural = """
+                String contentSec01Mod20 = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "A Corda A",
-                            "text": "A 5ª corda solta é a nota A. As regras de distância se mantêm: 1 Tom para a maioria das notas, e 1 Semitom entre as exceções B-C e E-F.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 5,
-                                        "fret": 0
-                                    }
-                                ]
-                            }
+                            "title": "Acidentes nas Cordas Agudas",
+                            "text": "A mesma lógica de sustenidos e bemóis vale para qualquer corda: avance 1 casa para o sustenido, recue 1 casa para o bemol. Vamos praticar nas 3 cordas mais agudas: Sol, Si e Mi agudo."
                         },
                         {
                             "type": "DRILL",
-                            "title": "A Corda Solta",
-                            "question": "Selecione a 5ª corda solta.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 0
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "Avançando 1 Tom",
-                            "text": "Avançando 1 Tom (2 casas) a partir da corda A solta, localizamos a nota B na casa 2.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 5,
-                                        "fret": 2
-                                    }
-                                ]
-                            }
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "G# na Corda Sol",
+                            "question": "Encontre o G natural (corda solta) na 3ª corda e avance 1 semitom para marcar o G#.",
+                            "targetShape": [ { "string": 3, "fret": 1 } ]
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota C",
-                            "question": "Aplicando a distância de 1 Semitom entre B e C, localize o C na 5ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 3
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "C# na Corda Si",
+                            "question": "Encontre o C natural na 2ª corda e avance 1 semitom para marcar o C#.",
+                            "targetShape": [ { "string": 2, "fret": 2 } ]
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota D",
-                            "question": "Avance 1 Tom a partir do C e localize a nota D na 5ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 5
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "Notas E e F",
-                            "text": "Continuando a escala, encontramos o E na casa 7. Em seguida, aplica-se novamente a regra de 1 Semitom para chegar ao F.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 5,
-                                        "fret": 7
-                                    },
-                                    {
-                                        "string": 5,
-                                        "fret": 8
-                                    }
-                                ]
-                            }
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Bb na Corda Mi Agudo",
+                            "question": "Encontre o B natural na 1ª corda e recue 1 semitom para marcar o Bb.",
+                            "targetShape": [ { "string": 1, "fret": 6 } ]
                         },
                         {
                             "type": "DRILL",
-                            "title": "Nota F",
-                            "question": "Localize a nota F na 5ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 8
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Eb na Corda Si",
+                            "question": "Encontre o E natural na 2ª corda e recue 1 semitom para marcar o Eb.",
+                            "targetShape": [ { "string": 2, "fret": 4 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (3ª corda, casa 1)?",
+                            "options": [ "G", "G#", "A", "A#" ],
+                            "correctAnswer": "G#",
+                            "markedPosition": { "string": 3, "fret": 1 }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Revisão: Acidentes nas Cordas Agudas",
+                            "question": "Marque, ao mesmo tempo, o G# na 3ª corda e o Bb na 1ª corda.",
+                            "targetShape": [ { "string": 3, "fret": 1 }, { "string": 1, "fret": 6 } ]
                         }
                     ]
                 """;
 
-                String contentString5Accidentals = """
-                    [
-                        {
-                            "type": "THEORY",
-                            "title": "Sustenidos na Corda A",
-                            "text": "A lógica de acidentes se mantém de forma universal. Para encontrar a nota C#, basta localizar o C e avançar 1 semitom.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 5,
-                                        "fret": 3
-                                    },
-                                    {
-                                        "string": 5,
-                                        "fret": 4
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "Nota C#",
-                            "question": "Localize o C# na 5ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 4
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "Nota Eb",
-                            "question": "Localize o E natural (casa 7) e aplique o bemol recuando 1 semitom para encontrar o Eb.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 6
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "O Bb na Corda 5",
-                            "text": "A casa 1 da 5ª corda corresponde ao Bb (ou A#), recuando 1 semitom a partir do B (casa 2) ou avançando a partir do A solto.",
-                            "illustration": {
-                                "kind": "fretboard",
-                                "notes": [
-                                    {
-                                        "string": 5,
-                                        "fret": 1
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "Nota Bb",
-                            "question": "Localize a nota Bb na 5ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 1
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        }
-                    ]
-                """;
-
-                String contentOctaveShape64 = """
+                String contentSec01Mod21 = """
                     [
                         {
                             "type": "THEORY",
@@ -582,14 +1306,8 @@ public class DataInitializer {
                             "illustration": {
                                 "kind": "fretboard",
                                 "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 3
-                                    },
-                                    {
-                                        "string": 4,
-                                        "fret": 5
-                                    }
+                                    { "string": 6, "fret": 3 },
+                                    { "string": 4, "fret": 5 }
                                 ]
                             }
                         },
@@ -600,571 +1318,453 @@ public class DataInitializer {
                             "illustration": {
                                 "kind": "fretboard",
                                 "notes": [
-                                    {
-                                        "string": 6,
-                                        "fret": 5
-                                    },
-                                    {
-                                        "string": 4,
-                                        "fret": 7
-                                    }
+                                    { "string": 6, "fret": 5 },
+                                    { "string": 4, "fret": 7 }
                                 ]
                             }
                         },
                         {
                             "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
                             "title": "Oitava de A",
-                            "question": "Selecione as duas notas que formam a oitava de A (Tônica na 6ª corda, casa 5).",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 5
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 7
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "question": "Selecione as duas notas que formam a oitava de A (tônica na 6ª corda, casa 5).",
+                            "targetShape": [ { "string": 6, "fret": 5 }, { "string": 4, "fret": 7 } ]
                         },
                         {
                             "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
                             "title": "Oitava de C",
                             "question": "Encontre o C na 6ª corda e marque sua respectiva oitava na 4ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 8
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 10
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "targetShape": [ { "string": 6, "fret": 8 }, { "string": 4, "fret": 10 } ]
                         },
                         {
                             "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
                             "title": "Encontrando a Tônica",
                             "question": "Dado que a 4ª corda, casa 2, é um E, encontre esta nota e selecione o E de origem na 6ª corda solta.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 0
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 2
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "targetShape": [ { "string": 6, "fret": 0 }, { "string": 4, "fret": 2 } ]
                         }
                     ]
                 """;
 
-                String contentPowerChords = """
+                String contentSec01Mod22 = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "O Power Chord (C5)",
-                            "text": "Formado pela Tônica e a 5ª Justa. Veja o shape do C5 a partir da corda A.",
+                            "title": "O Shape 5-3",
+                            "text": "O mesmo princípio de oitava vale para outros pares de corda: pulando a 4ª corda, a oitava de uma nota na 5ª corda aparece 2 casas à frente na 3ª corda — a mesma distância do shape 6-4.",
                             "illustration": {
                                 "kind": "fretboard",
                                 "notes": [
-                                    {
-                                        "string": 5,
-                                        "fret": 3
-                                    },
-                                    {
-                                        "string": 4,
-                                        "fret": 5
-                                    }
+                                    { "string": 5, "fret": 3 },
+                                    { "string": 3, "fret": 5 }
                                 ]
                             }
                         },
                         {
                             "type": "DRILL",
-                            "title": "Prática: Power Chord",
-                            "question": "Monte o shape de C5 na 5ª corda.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 3
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 5
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava de D",
+                            "question": "Selecione as duas notas que formam a oitava de D (tônica na 5ª corda, casa 5).",
+                            "targetShape": [ { "string": 5, "fret": 5 }, { "string": 3, "fret": 7 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava de E",
+                            "question": "Encontre o E na 5ª corda e marque sua respectiva oitava na 3ª corda.",
+                            "targetShape": [ { "string": 5, "fret": 7 }, { "string": 3, "fret": 9 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Encontrando a Tônica",
+                            "question": "Dado que a 3ª corda, casa 2, é um A, encontre esta nota e selecione o A de origem na 5ª corda solta.",
+                            "targetShape": [ { "string": 5, "fret": 0 }, { "string": 3, "fret": 2 } ]
                         }
                     ]
                 """;
 
-                String contentNotesAndIntervals = """
+                String contentSec01Mod23 = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "Nomear e Comparar Notas",
-                            "text": "Além de encontrar uma nota a partir do nome dela, também é útil treinar o caminho inverso: olhar para uma posição no braço e identificar rapidamente qual nota (ou qual intervalo entre duas notas) ela representa."
+                            "title": "O Shape 4-2 (Atenção à Mudança)",
+                            "text": "Aqui o shape muda! Entre as cordas Sol e Si existe um intervalo especial: uma 3ª maior, em vez da 4ª justa que existe entre as outras cordas vizinhas. Por causa disso, pulando a 3ª corda, a oitava de uma nota na 4ª corda aparece 3 casas à frente na 2ª corda — uma casa a mais que nos outros shapes.",
+                            "illustration": {
+                                "kind": "fretboard",
+                                "notes": [
+                                    { "string": 4, "fret": 0 },
+                                    { "string": 2, "fret": 3 }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava de E",
+                            "question": "Selecione as duas notas que formam a oitava de E (tônica na 4ª corda, casa 2).",
+                            "targetShape": [ { "string": 4, "fret": 2 }, { "string": 2, "fret": 5 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Oitava de G",
+                            "question": "Encontre o G na 4ª corda e marque sua respectiva oitava na 2ª corda.",
+                            "targetShape": [ { "string": 4, "fret": 5 }, { "string": 2, "fret": 8 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Encontrando a Tônica",
+                            "question": "Marque o D na 4ª corda solta e sua respectiva oitava na 2ª corda.",
+                            "targetShape": [ { "string": 4, "fret": 0 }, { "string": 2, "fret": 3 } ]
                         },
                         {
                             "type": "DRILL",
                             "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "Nomeie a Nota",
-                            "question": "Qual é o nome da nota marcada?",
+                            "title": "Por Que Esse Shape Muda?",
+                            "question": "Por que o shape de oitava entre as cordas Ré e Si precisa de 3 casas em vez de 2, diferente dos outros pares de corda?",
                             "options": [
-                                "F#",
-                                "G",
-                                "G#",
-                                "A"
+                                "Porque a corda Ré está desafinada",
+                                "Por causa do intervalo especial (3ª maior) entre as cordas Sol e Si",
+                                "Porque pulamos 2 cordas em vez de 1",
+                                "Na verdade não muda, é igual aos outros"
                             ],
-                            "correctAnswer": "G"
+                            "correctAnswer": "Por causa do intervalo especial (3ª maior) entre as cordas Sol e Si"
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod24 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Melodia com Todas as Cordas",
+                            "text": "Chegou a hora de tocar uma melodia usando as 6 cordas juntas. Vamos começar com as cordas soltas, subindo da mais grave para a mais aguda e voltando."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: Cordas Soltas (Sobe e Desce)",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 0 }, { "string": 5, "fret": 0 }, { "string": 4, "fret": 0 },
+                                { "string": 3, "fret": 0 }, { "string": 2, "fret": 0 }, { "string": 1, "fret": 0 },
+                                { "string": 2, "fret": 0 }, { "string": 3, "fret": 0 }, { "string": 4, "fret": 0 },
+                                { "string": 5, "fret": 0 }, { "string": 6, "fret": 0 }
+                            ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: Alcançando o Topo",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 0 }, { "string": 5, "fret": 0 }, { "string": 4, "fret": 0 },
+                                { "string": 3, "fret": 0 }, { "string": 2, "fret": 0 }, { "string": 1, "fret": 0 },
+                                { "string": 1, "fret": 3 }, { "string": 1, "fret": 0 }, { "string": 2, "fret": 0 },
+                                { "string": 3, "fret": 0 }, { "string": 4, "fret": 0 }, { "string": 5, "fret": 0 },
+                                { "string": 6, "fret": 0 }
+                            ]
+                        }
+                    ]
+                """;
+
+                String contentSec01Mod25 = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Revisão Geral",
+                            "text": "Você já conhece as notas naturais em todas as 6 cordas. Agora vamos testar sua velocidade de reconhecimento, misturando cordas diferentes sem aviso prévio."
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Reconhecimento Rápido: C",
+                            "question": "Localize rapidamente a nota C na 6ª corda.",
+                            "targetShape": [ { "string": 6, "fret": 8 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Reconhecimento Rápido: G",
+                            "question": "Localize rapidamente a nota G na 5ª corda.",
+                            "targetShape": [ { "string": 5, "fret": 10 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Reconhecimento Rápido: E",
+                            "question": "Localize rapidamente a nota E na 3ª corda.",
+                            "targetShape": [ { "string": 3, "fret": 9 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "SHAPE_MATCH",
+                            "title": "Reconhecimento Rápido: F",
+                            "question": "Localize rapidamente a nota F na 2ª corda.",
+                            "targetShape": [ { "string": 2, "fret": 6 } ]
+                        },
+                        {
+                            "type": "DRILL",
+                            "exerciseType": "MULTIPLE_CHOICE",
+                            "title": "Identifique a Nota",
+                            "question": "Qual é o nome da nota marcada (1ª corda, casa 5)?",
+                            "options": [ "G#", "A", "A#", "B" ],
+                            "correctAnswer": "A",
+                            "markedPosition": { "string": 1, "fret": 5 }
                         },
                         {
                             "type": "DRILL",
                             "exerciseType": "FIND_ALL_OCCURRENCES",
-                            "title": "Todas as Ocorrências",
-                            "question": "Marque todas as ocorrências da nota E até a casa 12.",
+                            "title": "Todas as Ocorrências de E",
+                            "question": "Agora que você conhece todas as cordas, marque todas as ocorrências da nota E até a casa 12, em qualquer corda.",
                             "targetNote": "E",
                             "maxFret": 12
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "Identifique o Intervalo",
-                            "question": "Qual é o intervalo entre as duas notas marcadas (tônica em roxo)?",
-                            "options": [
-                                "2",
-                                "♭3",
-                                "3",
-                                "4"
-                            ],
-                            "correctAnswer": "♭3"
                         }
                     ]
                 """;
 
-                String contentChordBuilding = """
+                String contentSec01Mod26 = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "Fórmula do Acorde",
-                            "text": "Um acorde é formado empilhando intervalos a partir da tônica. Uma tríade maior é Tônica + 3ª maior + 5ª justa; uma tríade menor troca a 3ª maior pela 3ª menor. Em vez de decorar posições fixas, você pode montar o acorde encontrando essas notas em qualquer lugar do braço."
+                            "title": "Chegamos ao Fim da Seção!",
+                            "text": "Para fechar esta seção, vamos tocar duas sequências finais que usam tudo o que você aprendeu, misturando várias cordas: um arpejo de C maior e uma escala ascendente e descendente."
                         },
                         {
                             "type": "DRILL",
-                            "exerciseType": "CHORD_BUILD",
-                            "title": "Tríade de Dó Maior",
-                            "question": "Monte a tríade de C maior (C - E - G) selecionando uma ocorrência de cada nota.",
-                            "root": "C",
-                            "quality": "major"
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 1: Arpejo de C Maior",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 5, "fret": 3 }, { "string": 4, "fret": 2 }, { "string": 3, "fret": 0 }, { "string": 2, "fret": 1 },
+                                { "string": 1, "fret": 0 }, { "string": 2, "fret": 1 }, { "string": 3, "fret": 0 }, { "string": 4, "fret": 2 },
+                                { "string": 5, "fret": 3 }
+                            ]
                         },
                         {
                             "type": "DRILL",
-                            "exerciseType": "CHORD_BUILD",
-                            "title": "Tríade de Lá Menor",
-                            "question": "Monte a tríade de A menor (A - C - E) selecionando uma ocorrência de cada nota.",
-                            "root": "A",
-                            "quality": "minor"
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 2: Escala Ascendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 0 }, { "string": 6, "fret": 1 }, { "string": 6, "fret": 3 }, { "string": 6, "fret": 5 },
+                                { "string": 5, "fret": 2 }, { "string": 5, "fret": 3 }, { "string": 5, "fret": 5 }, { "string": 4, "fret": 2 }
+                            ]
                         },
                         {
                             "type": "DRILL",
-                            "exerciseType": "CHORD_BUILD",
-                            "title": "Tétrade de Sol Dominante",
-                            "question": "Monte o G7 (G - B - D - F) selecionando uma ocorrência de cada nota.",
-                            "root": "G",
-                            "quality": "dom7"
+                            "exerciseType": "TAB_READING",
+                            "title": "Sequência 3: Escala Descendente",
+                            "question": "Reproduza no braço a sequência mostrada na tablatura acima, de volta ao início.",
+                            "targetSequence": [
+                                { "string": 4, "fret": 2 }, { "string": 5, "fret": 5 }, { "string": 5, "fret": 3 }, { "string": 5, "fret": 2 },
+                                { "string": 6, "fret": 5 }, { "string": 6, "fret": 3 }, { "string": 6, "fret": 1 }, { "string": 6, "fret": 0 }
+                            ]
                         }
                     ]
                 """;
 
-                String contentTriadInversions = """
+                String contentSec01ModShape31 = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "Inversões de Tríade",
-                            "text": "Uma tríade tem sempre as mesmas 3 notas, mas a nota mais grave (o baixo) pode mudar. Quando a fundamental está no baixo, é a posição fundamental. Quando a 3ª está no baixo, é a 1ª inversão. Quando a 5ª está no baixo, é a 2ª inversão. No violão isso significa escolher posições onde a nota mais grave selecionada seja a certa."
+                            "title": "O Shape 3-1 (Mesma Lógica do 4-2)",
+                            "text": "Assim como no shape 4-2, pular a 2ª corda (Si) também exige 3 casas em vez de 2 — porque a dupla Sol-Si é uma 3ª maior, não uma 4ª justa. Esse é o último shape de oitava 'pula 1 corda' que cabe no braço.",
+                            "illustration": { "kind": "fretboard", "notes": [ { "string": 3, "fret": 0 }, { "string": 1, "fret": 3 } ] }
                         },
+                        { "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Oitava de G", "question": "Selecione as duas notas que formam a oitava de G (tônica na 3ª corda solta).", "targetShape": [ { "string": 3, "fret": 0 }, { "string": 1, "fret": 3 } ] },
+                        { "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Oitava de A", "question": "Encontre o A na 3ª corda e marque sua respectiva oitava na 1ª corda.", "targetShape": [ { "string": 3, "fret": 2 }, { "string": 1, "fret": 5 } ] },
+                        { "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Encontrando a Tônica", "question": "Dado que a 1ª corda, casa 3, é um G, encontre esta nota e selecione o G de origem na 3ª corda solta.", "targetShape": [ { "string": 3, "fret": 0 }, { "string": 1, "fret": 3 } ] },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "TRIAD_INVERSION",
-                            "title": "C Maior - Posição Fundamental",
-                            "question": "Monte a tríade de C maior (C - E - G) com o C (fundamental) sendo a nota mais grave selecionada.",
-                            "root": "C",
-                            "quality": "major",
-                            "inversion": 0
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "TRIAD_INVERSION",
-                            "title": "C Maior - 1ª Inversão",
-                            "question": "Monte a tríade de C maior (C - E - G) com o E (3ª) sendo a nota mais grave selecionada.",
-                            "root": "C",
-                            "quality": "major",
-                            "inversion": 1
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "TRIAD_INVERSION",
-                            "title": "C Maior - 2ª Inversão",
-                            "question": "Monte a tríade de C maior (C - E - G) com o G (5ª) sendo a nota mais grave selecionada.",
-                            "root": "C",
-                            "quality": "major",
-                            "inversion": 2
-                        },
-                        {
-                            "type": "THEORY",
-                            "title": "Inversões de Tétrade",
-                            "text": "Uma tétrade (acorde de 4 notas, como um 7ª) tem uma inversão a mais que uma tríade: quando a 7ª está no baixo, é a 3ª inversão. A lógica é a mesma: qualquer uma das 4 notas do acorde pode ser a mais grave."
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "TRIAD_INVERSION",
-                            "title": "G7 - Posição Fundamental",
-                            "question": "Monte a tétrade de G7 (G - B - D - F) com o G (fundamental) sendo a nota mais grave selecionada.",
-                            "root": "G",
-                            "quality": "dom7",
-                            "inversion": 0
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "TRIAD_INVERSION",
-                            "title": "G7 - 1ª Inversão",
-                            "question": "Monte a tétrade de G7 (G - B - D - F) com o B (3ª) sendo a nota mais grave selecionada.",
-                            "root": "G",
-                            "quality": "dom7",
-                            "inversion": 1
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "TRIAD_INVERSION",
-                            "title": "G7 - 2ª Inversão",
-                            "question": "Monte a tétrade de G7 (G - B - D - F) com o D (5ª) sendo a nota mais grave selecionada.",
-                            "root": "G",
-                            "quality": "dom7",
-                            "inversion": 2
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "TRIAD_INVERSION",
-                            "title": "G7 - 3ª Inversão",
-                            "question": "Monte a tétrade de G7 (G - B - D - F) com o F (7ª) sendo a nota mais grave selecionada.",
-                            "root": "G",
-                            "quality": "dom7",
-                            "inversion": 3
+                            "type": "DRILL", "exerciseType": "MULTIPLE_CHOICE", "title": "Por Que Esse Shape Também Muda?",
+                            "question": "Por que o shape de oitava entre as cordas Sol e Mi agudo também precisa de 3 casas em vez de 2?",
+                            "options": [ "Porque a corda Sol está desafinada", "Por causa do intervalo especial (3ª maior) entre as cordas Sol e Si", "Porque pulamos 2 cordas em vez de 1", "Só esse shape muda, os outros não" ],
+                            "correctAnswer": "Por causa do intervalo especial (3ª maior) entre as cordas Sol e Si"
                         }
                     ]
                 """;
 
-                String contentCaged = """
+                String contentSec01ModScaleGrave = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "O Sistema CAGED",
-                            "text": "As formas dos acordes abertos C, A, G, E e D podem ser deslocadas pelo braço usando pestana (barra), mantendo o mesmo desenho relativo de dedos. Isso permite tocar o mesmo acorde em cinco posições diferentes, cada uma baseada em uma forma familiar. Vamos construir o mesmo acorde (G maior) a partir das cinco formas, subindo o braço: G, E, D, C e A."
+                            "title": "A Escala de Dó Maior (Graves)",
+                            "text": "Você já conhece, sem perceber, todas as notas da escala de Dó maior: ela usa só as notas naturais (sem sustenido nem bemol) que você vem aprendendo desde o início. Vamos tocar a primeira metade dela começando no Dó da 6ª corda, cruzando as três cordas graves.",
+                            "illustration": { "kind": "fretboard", "notes": [ { "string": 6, "fret": 8 }, { "string": 6, "fret": 10 }, { "string": 5, "fret": 7 }, { "string": 5, "fret": 8 }, { "string": 5, "fret": 10 }, { "string": 4, "fret": 7 }, { "string": 4, "fret": 9 }, { "string": 4, "fret": 10 } ] }
                         },
                         {
-                            "type": "DRILL",
-                            "title": "G Maior - Formato G (Aberto)",
-                            "question": "Monte o acorde de G maior na posição aberta, formato G (sem pestana).",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 3
-                                },
-                                {
-                                    "string": 5,
-                                    "fret": 2
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 0
-                                },
-                                {
-                                    "string": 3,
-                                    "fret": 0
-                                },
-                                {
-                                    "string": 2,
-                                    "fret": 0
-                                },
-                                {
-                                    "string": 1,
-                                    "fret": 3
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 1: Dó a Dó (Subindo)", "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [ { "string": 6, "fret": 8 }, { "string": 6, "fret": 10 }, { "string": 5, "fret": 7 }, { "string": 5, "fret": 8 }, { "string": 5, "fret": 10 }, { "string": 4, "fret": 7 }, { "string": 4, "fret": 9 }, { "string": 4, "fret": 10 } ]
                         },
                         {
-                            "type": "DRILL",
-                            "title": "G Maior - Formato E",
-                            "question": "Monte o acorde de G maior usando o formato E, com pestana na casa 3 (6ª corda = raiz). Pressione as 6 cordas, como num acorde real.",
-                            "targetShape": [
-                                {
-                                    "string": 6,
-                                    "fret": 3
-                                },
-                                {
-                                    "string": 5,
-                                    "fret": 5
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 5
-                                },
-                                {
-                                    "string": 3,
-                                    "fret": 4
-                                },
-                                {
-                                    "string": 2,
-                                    "fret": 3
-                                },
-                                {
-                                    "string": 1,
-                                    "fret": 3
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 2: Dó a Dó (Descendo)", "question": "Reproduza no braço a sequência mostrada na tablatura acima, de volta ao início.",
+                            "targetSequence": [ { "string": 4, "fret": 10 }, { "string": 4, "fret": 9 }, { "string": 4, "fret": 7 }, { "string": 5, "fret": 10 }, { "string": 5, "fret": 8 }, { "string": 5, "fret": 7 }, { "string": 6, "fret": 10 }, { "string": 6, "fret": 8 } ]
                         },
                         {
-                            "type": "DRILL",
-                            "title": "G Maior - Formato D",
-                            "question": "Agora monte o mesmo acorde de G maior usando o formato D, com pestana na casa 5 (4ª corda = raiz). Apenas as 4 cordas mais agudas são tocadas nesse formato.",
-                            "targetShape": [
-                                {
-                                    "string": 4,
-                                    "fret": 5
-                                },
-                                {
-                                    "string": 3,
-                                    "fret": 7
-                                },
-                                {
-                                    "string": 2,
-                                    "fret": 8
-                                },
-                                {
-                                    "string": 1,
-                                    "fret": 7
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "G Maior - Formato C",
-                            "question": "Monte o mesmo acorde de G maior usando o formato C, com pestana na casa 7 (5ª corda = raiz).",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 10
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 9
-                                },
-                                {
-                                    "string": 3,
-                                    "fret": 7
-                                },
-                                {
-                                    "string": 2,
-                                    "fret": 8
-                                },
-                                {
-                                    "string": 1,
-                                    "fret": 7
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "DRILL",
-                            "title": "G Maior - Formato A",
-                            "question": "Por fim, monte o mesmo acorde de G maior usando o formato A, com pestana na casa 10 (5ª corda = raiz). A 6ª corda não é tocada nesse formato.",
-                            "targetShape": [
-                                {
-                                    "string": 5,
-                                    "fret": 10
-                                },
-                                {
-                                    "string": 4,
-                                    "fret": 12
-                                },
-                                {
-                                    "string": 3,
-                                    "fret": 12
-                                },
-                                {
-                                    "string": 2,
-                                    "fret": 12
-                                },
-                                {
-                                    "string": 1,
-                                    "fret": 10
-                                }
-                            ],
-                            "exerciseType": "SHAPE_MATCH"
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "Identifique o Sistema",
-                            "question": "As cinco posições que você acabou de tocar formam o mesmo acorde de G maior em regiões diferentes do braço. Esse é o princípio de qual sistema de acordes móveis?",
-                            "options": [
-                                "Power Chords",
-                                "CAGED",
-                                "Modos Gregos",
-                                "Campo Harmônico"
-                            ],
-                            "correctAnswer": "CAGED"
+                            "type": "THEORY",
+                            "title": "Um Punhado de Notas, Vários Nomes",
+                            "text": "Essa mesma sequência de notas, se você começar a contar a partir do Lá em vez do Dó, também é a escala de Lá menor natural — e se tirar o Ré e o Si, vira a pentatônica de Lá menor. Mesmas notas, ponto de partida diferente."
                         }
                     ]
                 """;
 
-                String contentHarmonicField = """
+                String contentSec01ModScaleAgudo = """
                     [
                         {
                             "type": "THEORY",
-                            "title": "Campo Harmônico",
-                            "text": "Empilhando terças a partir de cada nota de uma escala maior, obtemos 7 acordes, um por grau. Os graus são numerados com algarismos romanos: maiúsculo para acordes maiores, minúsculo para menores, e um círculo (°) para o único diminuto. Em Dó maior: I=C, ii=Dm, iii=Em, IV=F, V=G, vi=Am, vii°=Bdim."
+                            "title": "A Escala de Dó Maior (Agudas)",
+                            "text": "Continuando a escala do bloco anterior, vamos completar as notas que faltam — do Ré até o Dó, uma oitava acima — agora usando as cordas Sol, Si e Mi agudo.",
+                            "illustration": { "kind": "fretboard", "notes": [ { "string": 3, "fret": 7 }, { "string": 3, "fret": 9 }, { "string": 3, "fret": 10 }, { "string": 3, "fret": 12 }, { "string": 2, "fret": 10 }, { "string": 2, "fret": 12 }, { "string": 1, "fret": 8 } ] }
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "HARMONIC_FIELD",
-                            "title": "IV Grau",
-                            "question": "Toque no acorde do IV grau do campo harmônico de C maior.",
-                            "key": "C",
-                            "mode": "major",
-                            "targetDegree": "IV"
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 1: Ré ao Dó (Subindo)", "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [ { "string": 3, "fret": 7 }, { "string": 3, "fret": 9 }, { "string": 3, "fret": 10 }, { "string": 3, "fret": 12 }, { "string": 2, "fret": 10 }, { "string": 2, "fret": 12 }, { "string": 1, "fret": 8 } ]
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "HARMONIC_FIELD",
-                            "title": "vi Grau",
-                            "question": "Toque no acorde do vi grau do campo harmônico de C maior.",
-                            "key": "C",
-                            "mode": "major",
-                            "targetDegree": "vi"
-                        },
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 2: Dó ao Ré (Descendo)", "question": "Reproduza no braço a sequência mostrada na tablatura acima, de volta ao início.",
+                            "targetSequence": [ { "string": 1, "fret": 8 }, { "string": 2, "fret": 12 }, { "string": 2, "fret": 10 }, { "string": 3, "fret": 12 }, { "string": 3, "fret": 10 }, { "string": 3, "fret": 9 }, { "string": 3, "fret": 7 } ]
+                        }
+                    ]
+                """;
+
+                String contentSec01ModScaleFull = """
+                    [
                         {
                             "type": "THEORY",
-                            "title": "Relativa Maior e Menor",
-                            "text": "Toda tonalidade maior compartilha as mesmas 7 notas com uma tonalidade menor: sua relativa. A relativa menor é sempre o vi grau da maior (uma 6ª acima da tônica). A relativa maior é sempre o III grau da menor (uma 3ª acima da tônica)."
+                            "title": "A Escala Completa: Duas Oitavas",
+                            "text": "Hora de juntar os dois pedaços que você aprendeu nos blocos anteriores numa escala só, do Dó grave ao Dó agudo duas oitavas acima, usando o braço inteiro."
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "Relativa Menor",
-                            "question": "Qual é a relativa menor de C maior?",
-                            "options": [
-                                "A menor",
-                                "E menor",
-                                "D menor",
-                                "G menor"
-                            ],
-                            "correctAnswer": "A menor"
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 1: Duas Oitavas (Subindo)", "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [
+                                { "string": 6, "fret": 8 }, { "string": 6, "fret": 10 }, { "string": 5, "fret": 7 }, { "string": 5, "fret": 8 }, { "string": 5, "fret": 10 }, { "string": 4, "fret": 7 }, { "string": 4, "fret": 9 }, { "string": 4, "fret": 10 },
+                                { "string": 3, "fret": 7 }, { "string": 3, "fret": 9 }, { "string": 3, "fret": 10 }, { "string": 3, "fret": 12 }, { "string": 2, "fret": 10 }, { "string": 2, "fret": 12 }, { "string": 1, "fret": 8 }
+                            ]
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "Relativa Maior",
-                            "question": "Qual é a relativa maior de A menor?",
-                            "options": [
-                                "C maior",
-                                "F maior",
-                                "G maior",
-                                "D maior"
-                            ],
-                            "correctAnswer": "C maior"
-                        },
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 2: Duas Oitavas (Descendo)", "question": "Reproduza no braço a sequência mostrada na tablatura acima, de volta ao início.",
+                            "targetSequence": [
+                                { "string": 1, "fret": 8 }, { "string": 2, "fret": 12 }, { "string": 2, "fret": 10 }, { "string": 3, "fret": 12 }, { "string": 3, "fret": 10 }, { "string": 3, "fret": 9 }, { "string": 3, "fret": 7 },
+                                { "string": 4, "fret": 10 }, { "string": 4, "fret": 9 }, { "string": 4, "fret": 7 }, { "string": 5, "fret": 10 }, { "string": 5, "fret": 8 }, { "string": 5, "fret": 7 }, { "string": 6, "fret": 10 }, { "string": 6, "fret": 8 }
+                            ]
+                        }
+                    ]
+                """;
+
+                String contentSec01ModTabGraves = """
+                    [
                         {
                             "type": "THEORY",
-                            "title": "Progressões Comuns",
-                            "text": "Progressões são sequências de graus que se repetem em milhares de músicas. A I-V-vi-IV, conhecida informalmente como a progressão dos 4 acordes, é uma das mais usadas na música popular."
+                            "title": "Tablatura: Cordas Graves Juntas",
+                            "text": "Hora de tirar cada corda do seu canto e tocar as três juntas numa frase só. Vamos praticar trocando de corda no meio da sequência, do jeito que aparece numa tablatura de verdade."
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "Reconhecendo a Progressão",
-                            "question": "Em C maior, a sequência de acordes C - G - Am - F corresponde a qual progressão de graus?",
-                            "options": [
-                                "I-V-vi-IV",
-                                "ii-V-I",
-                                "I-IV-V",
-                                "vi-IV-I-V"
-                            ],
-                            "correctAnswer": "I-V-vi-IV"
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 1: Cruzando as Cordas", "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [ { "string": 6, "fret": 0 }, { "string": 5, "fret": 0 }, { "string": 4, "fret": 0 }, { "string": 6, "fret": 3 }, { "string": 5, "fret": 3 }, { "string": 4, "fret": 3 }, { "string": 6, "fret": 5 }, { "string": 5, "fret": 5 }, { "string": 4, "fret": 5 } ]
                         },
                         {
-                            "type": "THEORY",
-                            "title": "Cadências",
-                            "text": "Cadência é o movimento de acordes que marca um ponto de repouso ou conclusão. A cadência perfeita (V-I) é a mais forte, porque a tensão do V grau resolve totalmente na tônica. A progressão ii-V-I encadeia subdominante, dominante e tônica, e é a base harmônica mais comum em jazz e em milhares de músicas populares."
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "Cadência Perfeita",
-                            "question": "Qual sequência de graus forma a cadência mais forte e conclusiva?",
-                            "options": [
-                                "V-I",
-                                "IV-I",
-                                "ii-V",
-                                "vi-IV"
-                            ],
-                            "correctAnswer": "V-I"
-                        },
-                        {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "ii-V-I",
-                            "question": "Em C maior, quais acordes formam a progressão ii-V-I?",
-                            "options": [
-                                "Dm - G - C",
-                                "Em - Am - Dm",
-                                "F - G - C",
-                                "Dm - F - C"
-                            ],
-                            "correctAnswer": "Dm - G - C"
-                        },
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 2: De Volta ao Início", "question": "Reproduza no braço a sequência mostrada na tablatura acima, de volta ao início.",
+                            "targetSequence": [ { "string": 4, "fret": 5 }, { "string": 5, "fret": 5 }, { "string": 6, "fret": 5 }, { "string": 4, "fret": 3 }, { "string": 5, "fret": 3 }, { "string": 6, "fret": 3 }, { "string": 4, "fret": 0 }, { "string": 5, "fret": 0 }, { "string": 6, "fret": 0 } ]
+                        }
+                    ]
+                """;
+
+                String contentSec01ModTabAgudas = """
+                    [
                         {
                             "type": "THEORY",
-                            "title": "Dominante Secundária",
-                            "text": "Uma dominante secundária é o V grau emprestado de outra tonalidade para reforçar temporariamente a resolução de um grau que não é a tônica. Ela é identificada como V/X, onde X é o grau alvo. Em C maior, o V do V (V/V) é D7: como o V grau de C é G, D7 funciona como a dominante de G e resolve fortemente para ele, mesmo D7 não pertencendo ao campo harmônico de C maior."
+                            "title": "Tablatura: Cordas Agudas Juntas",
+                            "text": "Mesma ideia do bloco anterior, agora com o trio agudo: Sol, Si e Mi agudo. Pratique trocando de corda no meio da frase."
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "MULTIPLE_CHOICE",
-                            "title": "V da V",
-                            "question": "Em C maior, qual é a dominante secundária do V grau (V/V)?",
-                            "options": [
-                                "D7",
-                                "A7",
-                                "E7",
-                                "B7"
-                            ],
-                            "correctAnswer": "D7"
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 1: Cruzando as Cordas", "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [ { "string": 3, "fret": 0 }, { "string": 2, "fret": 0 }, { "string": 1, "fret": 0 }, { "string": 3, "fret": 5 }, { "string": 2, "fret": 5 }, { "string": 1, "fret": 5 }, { "string": 3, "fret": 10 }, { "string": 2, "fret": 10 }, { "string": 1, "fret": 10 } ]
                         },
+                        {
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 2: De Volta ao Início", "question": "Reproduza no braço a sequência mostrada na tablatura acima, de volta ao início.",
+                            "targetSequence": [ { "string": 1, "fret": 10 }, { "string": 2, "fret": 10 }, { "string": 3, "fret": 10 }, { "string": 1, "fret": 5 }, { "string": 2, "fret": 5 }, { "string": 3, "fret": 5 }, { "string": 1, "fret": 0 }, { "string": 2, "fret": 0 }, { "string": 3, "fret": 0 } ]
+                        }
+                    ]
+                """;
+
+                String contentSec01ModRepeatGraves = """
+                    [
                         {
                             "type": "THEORY",
-                            "title": "Círculo de Quintas",
-                            "text": "O círculo de quintas organiza as 12 tonalidades em sequência de quintas justas. Partindo de C e avançando no sentido horário, cada tonalidade fica uma quinta acima da anterior: C, G, D, A, E, B, F#, C#, G#, D#, A#, F. Tonalidades vizinhas no círculo compartilham quase todas as notas, por isso soam bem em progressões e modulações."
+                            "title": "O Braço se Repete (Cordas Graves)",
+                            "text": "A casa 12 é a oitava da corda solta: mesma nota, mesmo nome, só que mais aguda. A partir dali, todo o padrão de casas que você aprendeu se repete de novo, idêntico — a casa 13 tem a mesma nota que a casa 1, a casa 15 a mesma da casa 3, e assim por diante. Basta somar 12.",
+                            "illustration": { "kind": "fretboard", "notes": [ { "string": 6, "fret": 1 }, { "string": 6, "fret": 13 } ] }
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "CIRCLE_OF_FIFTHS",
-                            "title": "Uma Quinta Acima",
-                            "question": "No círculo de quintas, toque na tonalidade que fica uma quinta acima de C.",
-                            "targetKey": "G"
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Nota F, uma Oitava Acima", "question": "Você já sabe que a casa 1 da 6ª corda é F. Encontre o F na oitava seguinte, depois da casa 12.",
+                            "targetShape": [ { "string": 6, "fret": 13 } ]
                         },
                         {
-                            "type": "DRILL",
-                            "exerciseType": "CIRCLE_OF_FIFTHS",
-                            "title": "Uma Quinta Abaixo",
-                            "question": "No círculo de quintas, toque na tonalidade que fica uma quinta abaixo de C (uma posição anti-horária).",
-                            "targetKey": "F"
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Nota C, uma Oitava Acima", "question": "Encontre o C na 5ª corda, na oitava seguinte, depois da casa 12.",
+                            "targetShape": [ { "string": 5, "fret": 15 } ]
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Nota A, uma Oitava Acima", "question": "Encontre o A na 4ª corda, na oitava seguinte, depois da casa 12.",
+                            "targetShape": [ { "string": 4, "fret": 19 } ]
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "MULTIPLE_CHOICE", "title": "Some 12 e Descubra", "question": "Sabendo que a casa 5 da 4ª corda é G, qual nota está na casa 17?",
+                            "options": [ "F#", "G", "G#", "A" ], "correctAnswer": "G", "markedPosition": { "string": 4, "fret": 17 }
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Duas Oitavas da Mesma Nota", "question": "Selecione o C na 6ª corda tanto antes quanto depois da casa 12.",
+                            "targetShape": [ { "string": 6, "fret": 8 }, { "string": 6, "fret": 20 } ]
+                        }
+                    ]
+                """;
+
+                String contentSec01ModRepeatAgudas = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "O Braço se Repete (Cordas Agudas)",
+                            "text": "A mesma lógica vale para as cordas agudas: some 12 à casa que você já conhece e chega na oitava seguinte, idêntica em nome."
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Nota A, uma Oitava Acima", "question": "Encontre o A na 3ª corda, na oitava seguinte, depois da casa 12.",
+                            "targetShape": [ { "string": 3, "fret": 14 } ]
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Nota E, uma Oitava Acima", "question": "Encontre o E na 2ª corda, na oitava seguinte, depois da casa 12.",
+                            "targetShape": [ { "string": 2, "fret": 17 } ]
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Nota G, uma Oitava Acima", "question": "Encontre o G na 1ª corda, na oitava seguinte, depois da casa 12.",
+                            "targetShape": [ { "string": 1, "fret": 15 } ]
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "MULTIPLE_CHOICE", "title": "Some 12 e Descubra", "question": "Sabendo que a casa 1 da 2ª corda é C, qual nota está na casa 13?",
+                            "options": [ "B", "C", "C#", "D" ], "correctAnswer": "C", "markedPosition": { "string": 2, "fret": 13 }
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "SHAPE_MATCH", "title": "Duas Oitavas da Mesma Nota", "question": "Selecione o B na 1ª corda tanto antes quanto depois da casa 12.",
+                            "targetShape": [ { "string": 1, "fret": 7 }, { "string": 1, "fret": 19 } ]
+                        }
+                    ]
+                """;
+
+                String contentSec01ModRepeatTab = """
+                    [
+                        {
+                            "type": "THEORY",
+                            "title": "Tablatura: Casas 12 a 22",
+                            "text": "Agora que você sabe que tudo se repete depois da casa 12, aqui está uma frase inteira tocada só na região mais aguda do braço, cruzando várias cordas."
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 1: Subindo", "question": "Reproduza no braço a sequência mostrada na tablatura acima.",
+                            "targetSequence": [ { "string": 6, "fret": 13 }, { "string": 5, "fret": 15 }, { "string": 4, "fret": 19 }, { "string": 3, "fret": 14 }, { "string": 2, "fret": 17 }, { "string": 1, "fret": 15 } ]
+                        },
+                        {
+                            "type": "DRILL", "exerciseType": "TAB_READING", "title": "Sequência 2: Descendo", "question": "Reproduza no braço a sequência mostrada na tablatura acima, de volta ao início.",
+                            "targetSequence": [ { "string": 1, "fret": 15 }, { "string": 2, "fret": 17 }, { "string": 3, "fret": 14 }, { "string": 4, "fret": 19 }, { "string": 5, "fret": 15 }, { "string": 6, "fret": 13 } ]
                         }
                     ]
                 """;
@@ -1175,6 +1775,12 @@ public class DataInitializer {
                             "type": "THEORY",
                             "title": "Trilha de Testes",
                             "text": "Este módulo reúne um exemplo de cada recurso implementado até agora: as 4 ilustrações estáticas de teoria e os 11 tipos de exercício. Cada exercício vem precedido de uma explicação rápida de como interagir com ele."
+                        },
+                        {
+                            "type": "THEORY",
+                            "title": "Imagem de Apoio",
+                            "text": "Passos também podem trazer uma imagem de apoio, além ou no lugar de uma ilustração interativa.",
+                            "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Guitar_neck.jpg/640px-Guitar_neck.jpg"
                         },
                         {
                             "type": "THEORY",
@@ -1429,44 +2035,43 @@ public class DataInitializer {
                     ]
                 """;
 
-                String contentRhythm = """
-                    [
-                        {
-                            "type": "THEORY",
-                            "title": "Semínima (Quarter Note)",
-                            "text": "A pulsação básica. Uma nota por tempo (1, 2, 3, 4).",
-                            "audioUrl": "quarter_note_beat.mp3"
-                        },
-                        {
-                            "type": "RHYTHM_DRILL",
-                            "title": "Sinta o tempo",
-                            "notation": "4/4",
-                            "pattern": [
-                                "X",
-                                "X",
-                                "X",
-                                "X"
-                            ],
-                            "tempo": 80
-                        }
-                    ]
-                """;
-
                 moduleRepository.saveAll(List.of(
-                        new Module("O Braço do Instrumento", 1, secNavigation, contentFretboardBasics),
-                        new Module("Corda 6: Notas Naturais", 2, secNavigation, contentString6Natural),
-                        new Module("Corda 6: Acidentes", 3, secNavigation, contentString6Accidentals),
-                        new Module("Corda 5: Notas Naturais", 4, secNavigation, contentString5Natural),
-                        new Module("Corda 5: Acidentes", 5, secNavigation, contentString5Accidentals),
-                        new Module("A Oitava (6-4)", 6, secNavigation, contentOctaveShape64),
-                        new Module("Perfect 5ths (Power Chords)", 7, secIntervals, contentPowerChords),
-                        new Module("Notas e Intervalos", 8, secIntervals, contentNotesAndIntervals),
-                        new Module("Understanding Pulse", 9, secRhythm, contentRhythm),
-                        new Module("Construindo Acordes", 10, secIntervals, contentChordBuilding),
-                        new Module("Inversões de Tríade e Tétrade", 11, secIntervals, contentTriadInversions),
-                        new Module("Sistema CAGED", 12, secIntervals, contentCaged),
-                        new Module("Campo Harmônico", 13, secIntervals, contentHarmonicField),
-                        new Module("Teste: Todos os Tipos de Exercício", 14, secQa, contentQaAllExerciseTypes)
+                        new Module("Corda Mi grave: casas 0-5", 1, sec01FundamentosBraco, contentSec01Mod01),
+                        new Module("Corda Mi grave: casas 5-12", 2, sec01FundamentosBraco, contentSec01Mod02),
+                        new Module("Tablatura: revisão da corda Mi grave", 3, sec01FundamentosBraco, contentSec01Mod03),
+                        new Module("Corda Lá: casas 0-5", 4, sec01FundamentosBraco, contentSec01Mod04),
+                        new Module("Corda Lá: casas 5-12", 5, sec01FundamentosBraco, contentSec01Mod05),
+                        new Module("Tablatura: revisão da corda Lá", 6, sec01FundamentosBraco, contentSec01Mod06),
+                        new Module("Corda Ré: casas 0-5", 7, sec01FundamentosBraco, contentSec01Mod07),
+                        new Module("Corda Ré: casas 5-12", 8, sec01FundamentosBraco, contentSec01Mod08),
+                        new Module("Tablatura: revisão da corda Ré", 9, sec01FundamentosBraco, contentSec01Mod09),
+                        new Module("Tablatura: cordas graves juntas", 10, sec01FundamentosBraco, contentSec01ModTabGraves),
+                        new Module("Oitavas: padrão Mi grave → Ré (Shape 6-4)", 11, sec01FundamentosBraco, contentSec01Mod21),
+                        new Module("Sustenidos e bemóis: cordas graves (Mi, Lá, Ré)", 12, sec01FundamentosBraco, contentSec01Mod19),
+                        new Module("Escala de Dó maior: cordas graves", 13, sec01FundamentosBraco, contentSec01ModScaleGrave),
+                        new Module("Corda Sol: casas 0-5", 14, sec01FundamentosBraco, contentSec01Mod10),
+                        new Module("Corda Sol: casas 5-12", 15, sec01FundamentosBraco, contentSec01Mod11),
+                        new Module("Tablatura: revisão da corda Sol", 16, sec01FundamentosBraco, contentSec01Mod12),
+                        new Module("Corda Si: casas 0-5", 17, sec01FundamentosBraco, contentSec01Mod13),
+                        new Module("Corda Si: casas 5-12", 18, sec01FundamentosBraco, contentSec01Mod14),
+                        new Module("Tablatura: revisão da corda Si", 19, sec01FundamentosBraco, contentSec01Mod15),
+                        new Module("Corda Mi agudo: casas 0-5", 20, sec01FundamentosBraco, contentSec01Mod16),
+                        new Module("Corda Mi agudo: casas 5-12", 21, sec01FundamentosBraco, contentSec01Mod17),
+                        new Module("Tablatura: revisão da corda Mi agudo", 22, sec01FundamentosBraco, contentSec01Mod18),
+                        new Module("Tablatura: cordas agudas juntas", 23, sec01FundamentosBraco, contentSec01ModTabAgudas),
+                        new Module("Oitavas: padrão Sol → Mi agudo (Shape 3-1)", 24, sec01FundamentosBraco, contentSec01ModShape31),
+                        new Module("Sustenidos e bemóis: cordas agudas (Sol, Si, Mi)", 25, sec01FundamentosBraco, contentSec01Mod20),
+                        new Module("Escala de Dó maior: cordas agudas", 26, sec01FundamentosBraco, contentSec01ModScaleAgudo),
+                        new Module("Oitavas: padrão Lá → Sol (Shape 5-3)", 27, sec01FundamentosBraco, contentSec01Mod22),
+                        new Module("Oitavas: padrão Ré → Si (Shape 4-2)", 28, sec01FundamentosBraco, contentSec01Mod23),
+                        new Module("Escala de Dó maior: braço inteiro", 29, sec01FundamentosBraco, contentSec01ModScaleFull),
+                        new Module("Tablatura: melodia com todas as cordas", 30, sec01FundamentosBraco, contentSec01Mod24),
+                        new Module("Revisão geral: ache qualquer nota", 31, sec01FundamentosBraco, contentSec01Mod25),
+                        new Module("O braço se repete (cordas graves)", 32, sec01FundamentosBraco, contentSec01ModRepeatGraves),
+                        new Module("O braço se repete (cordas agudas)", 33, sec01FundamentosBraco, contentSec01ModRepeatAgudas),
+                        new Module("Tablatura: casas 12 a 22", 34, sec01FundamentosBraco, contentSec01ModRepeatTab),
+                        new Module("Tablatura: revisão final da seção", 35, sec01FundamentosBraco, contentSec01Mod26),
+                        new Module("Teste: Todos os Tipos de Exercício", 9999, secQa, contentQaAllExerciseTypes)
                 ));
             }
         };

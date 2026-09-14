@@ -7,5 +7,6 @@ public record CreateModuleRequestDTO(
         @NotBlank String title,
         @NotNull Integer orderIndex,
         Integer xpReward,
-        String content
+        String content,
+        Boolean isSkipTest
 ) {}

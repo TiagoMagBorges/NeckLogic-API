@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ModuleRepository extends JpaRepository<Module, Long> {
-    Optional<Module> findBySectionAndOrderIndex(Section section, Integer orderIndex);
+    Optional<Module> findFirstBySectionAndOrderIndexOrderByIdAsc(Section section, Integer orderIndex);
     Optional<Module> findFirstBySectionOrderByOrderIndexAsc(Section section);
     List<Module> findBySectionTrack(Track track);
-    Optional<Module> findBySectionTrackAndOrderIndex(Track track, Integer orderIndex);
 }

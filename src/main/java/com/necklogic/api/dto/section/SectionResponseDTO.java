@@ -9,5 +9,8 @@ public record SectionResponseDTO(
         String title,
         String description,
         Integer orderIndex,
-        List<ModuleSummaryDTO> modules
+        List<ModuleSummaryDTO> modules,
+        Boolean skipRequiresTest,
+        Long skipTestModuleId,
+        Double skipPassThreshold
 ) {}
