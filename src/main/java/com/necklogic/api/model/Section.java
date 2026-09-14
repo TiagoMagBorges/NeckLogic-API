@@ -36,6 +36,17 @@ public class Section {
     @OneToMany(mappedBy = "section", cascade = CascadeType.ALL)
     private List<Module> modules = new ArrayList<>();
 
+    @Column(name = "skip_requires_test", nullable = false)
+    private boolean skipRequiresTest = false;
+
+    @ManyToOne
+    @JoinColumn(name = "skip_test_module_id")
+    @JsonIgnore
+    private Module skipTestModule;
+
+    @Column(name = "skip_pass_threshold")
+    private Double skipPassThreshold;
+
     public Section(String title, String description, Integer orderIndex) {
         this.title = title;
         this.description = description;

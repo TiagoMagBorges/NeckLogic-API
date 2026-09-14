@@ -35,6 +35,9 @@ public class Module {
     @Column(name = "xp_reward", nullable = false)
     private Integer xpReward = 50;
 
+    @Column(name = "is_skip_test", nullable = false)
+    private boolean skipTest = false;
+
     public Module(String title, Integer orderIndex, Section section, String content) {
         this.title = title;
         this.orderIndex = orderIndex;

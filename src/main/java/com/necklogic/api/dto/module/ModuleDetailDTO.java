@@ -6,5 +6,6 @@ public record ModuleDetailDTO(
         Integer orderIndex,
         Integer xpReward,
         String content,
-        Long sectionId
+        Long sectionId,
+        Boolean isSkipTest
 ) {}

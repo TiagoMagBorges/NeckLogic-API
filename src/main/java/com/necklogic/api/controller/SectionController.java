@@ -1,6 +1,8 @@
 package com.necklogic.api.controller;
 
 import com.necklogic.api.dto.module.CreateModuleRequestDTO;
+import com.necklogic.api.dto.section.SkipTestCompletionRequestDTO;
+import com.necklogic.api.dto.section.SkipTestCompletionResponseDTO;
 import com.necklogic.api.dto.section.UpdateSectionRequestDTO;
 import com.necklogic.api.model.Module;
 import com.necklogic.api.model.Section;
@@ -28,6 +30,15 @@ public class SectionController {
     public ResponseEntity<Void> skipSection(@PathVariable Long id, @AuthenticationPrincipal User user) {
         sectionService.skipSection(id, user);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/skip-test/complete")
+    public ResponseEntity<SkipTestCompletionResponseDTO> completeSkipTest(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user,
+            @RequestBody SkipTestCompletionRequestDTO data) {
+        SkipTestCompletionResponseDTO result = moduleService.completeSkipTest(id, user, data.mistakesCount(), data.drillCount());
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{id}")
