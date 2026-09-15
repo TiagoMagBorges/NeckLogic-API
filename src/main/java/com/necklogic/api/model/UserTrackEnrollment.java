@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,12 +34,6 @@ public class UserTrackEnrollment {
     @Column(name = "user_level", nullable = false)
     private Integer level = 1;
 
-    @Column(name = "current_streak", nullable = false)
-    private Integer currentStreak = 0;
-
-    @Column(name = "last_activity_date")
-    private LocalDate lastActivityDate;
-
     @Column(name = "enrolled_at", nullable = false)
     private LocalDateTime enrolledAt = LocalDateTime.now();
 
@@ -49,7 +42,6 @@ public class UserTrackEnrollment {
         this.track = track;
         this.xp = 0;
         this.level = 1;
-        this.currentStreak = 0;
         this.enrolledAt = LocalDateTime.now();
     }
 

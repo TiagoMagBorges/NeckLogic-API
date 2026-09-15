@@ -5,6 +5,8 @@ import com.necklogic.api.dto.section.CreateSectionRequestDTO;
 import com.necklogic.api.dto.section.SectionResponseDTO;
 import com.necklogic.api.dto.track.CreateTrackRequestDTO;
 import com.necklogic.api.dto.track.TrackResponseDTO;
+import com.necklogic.api.dto.track.TrackStatsDTO;
+import com.necklogic.api.dto.track.TrackTeacherSummaryDTO;
 import com.necklogic.api.dto.track.UpdateTrackRequestDTO;
 import com.necklogic.api.model.Section;
 import com.necklogic.api.model.User;
@@ -38,18 +40,23 @@ public class TrackController {
     }
 
     @GetMapping("/mine")
-    public ResponseEntity<List<TrackResponseDTO>> listMine(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<TrackTeacherSummaryDTO>> listMine(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(trackService.listOwnedBy(user));
     }
 
     @PostMapping
-    public ResponseEntity<TrackResponseDTO> create(@AuthenticationPrincipal User user, @RequestBody @Valid CreateTrackRequestDTO data) {
+    public ResponseEntity<TrackTeacherSummaryDTO> create(@AuthenticationPrincipal User user, @RequestBody @Valid CreateTrackRequestDTO data) {
         return ResponseEntity.ok(trackService.create(user, data));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TrackResponseDTO> update(@PathVariable Long id, @AuthenticationPrincipal User user, @RequestBody UpdateTrackRequestDTO data) {
+    public ResponseEntity<TrackTeacherSummaryDTO> update(@PathVariable Long id, @AuthenticationPrincipal User user, @RequestBody UpdateTrackRequestDTO data) {
         return ResponseEntity.ok(trackService.update(id, user, data));
+    }
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<TrackStatsDTO> getStats(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(trackService.getStats(id, user));
     }
 
     @DeleteMapping("/{id}")

@@ -109,7 +109,7 @@ public class AuthenticationService {
                 authenticatedUser.isOnboardingCompleted(),
                 enrollment.getXp(),
                 enrollment.getLevel(),
-                enrollment.getCurrentStreak(),
+                authenticatedUser.getCurrentStreak(),
                 authenticatedUser.getName(),
                 authenticatedUser.getEmail()
         );
@@ -130,7 +130,7 @@ public class AuthenticationService {
                 user.isOnboardingCompleted(),
                 enrollment.getXp(),
                 enrollment.getLevel(),
-                enrollment.getCurrentStreak(),
+                user.getCurrentStreak(),
                 user.getName(),
                 user.getEmail()
         );

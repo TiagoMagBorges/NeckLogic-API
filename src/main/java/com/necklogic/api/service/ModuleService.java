@@ -150,12 +150,14 @@ public class ModuleService {
             xpGained = Math.max((int) Math.round(baseReward - (safeMistakes * penaltyPerMistake)), minReward);
 
             LocalDate today = LocalDate.now();
-            if (enrollment.getLastActivityDate() == null || enrollment.getLastActivityDate().isBefore(today.minusDays(1))) {
-                enrollment.setCurrentStreak(1);
-                enrollment.setLastActivityDate(today);
-            } else if (enrollment.getLastActivityDate().isEqual(today.minusDays(1))) {
-                enrollment.setCurrentStreak(enrollment.getCurrentStreak() + 1);
-                enrollment.setLastActivityDate(today);
+            if (user.getLastActivityDate() == null || user.getLastActivityDate().isBefore(today.minusDays(1))) {
+                user.setCurrentStreak(1);
+                user.setLastActivityDate(today);
+                userRepository.save(user);
+            } else if (user.getLastActivityDate().isEqual(today.minusDays(1))) {
+                user.setCurrentStreak(user.getCurrentStreak() + 1);
+                user.setLastActivityDate(today);
+                userRepository.save(user);
             }
 
             enrollment.addXp(xpGained);
@@ -191,7 +193,7 @@ public class ModuleService {
                 enrollment.getXp(),
                 enrollment.getLevel(),
                 leveledUp,
-                enrollment.getCurrentStreak()
+                user.getCurrentStreak()
         );
     }
 

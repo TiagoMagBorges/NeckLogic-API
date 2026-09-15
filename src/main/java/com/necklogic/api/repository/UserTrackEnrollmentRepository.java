@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface UserTrackEnrollmentRepository extends JpaRepository<UserTrackEnrollment, Long> {
     Optional<UserTrackEnrollment> findByUserAndTrack(User user, Track track);
     List<UserTrackEnrollment> findByUser(User user);
+    List<UserTrackEnrollment> findByTrack(Track track);
+    long countByTrack(Track track);
     void deleteByTrack(Track track);
     void deleteByUser(User user);
 }

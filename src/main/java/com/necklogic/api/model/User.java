@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +42,12 @@ public class User implements UserDetails {
 
     @Column(name = "is_admin", nullable = false)
     private boolean admin = false;
+
+    @Column(name = "current_streak", nullable = false)
+    private Integer currentStreak = 0;
+
+    @Column(name = "last_activity_date")
+    private LocalDate lastActivityDate;
 
     public User(String email, String password, String name) {
         this.email = email;
