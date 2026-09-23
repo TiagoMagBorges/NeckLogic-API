@@ -11,4 +11,5 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
     Optional<Track> findByOfficialTrue();
     List<Track> findByPublishedTrue();
     List<Track> findByOwner(User owner);
+    List<Track> findByPublishedTrueAndApprovedFalseAndOfficialFalse();
 }

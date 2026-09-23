@@ -139,7 +139,19 @@ public class TrackService {
         if (!track.isPublished()) {
             throw new ForbiddenActionException("Esta trilha ainda não foi publicada.");
         }
+        if (track.isPaid()) {
+            throw new ForbiddenActionException("Esta trilha é paga. Finalize a compra para se matricular.");
+        }
 
+        return doEnroll(user, track);
+    }
+
+    @Transactional
+    public UserTrackEnrollment grantPaidEnrollment(User user, Track track) {
+        return doEnroll(user, track);
+    }
+
+    private UserTrackEnrollment doEnroll(User user, Track track) {
         return enrollmentRepository.findByUserAndTrack(user, track)
                 .orElseGet(() -> enrollmentRepository.save(new UserTrackEnrollment(user, track)));
     }

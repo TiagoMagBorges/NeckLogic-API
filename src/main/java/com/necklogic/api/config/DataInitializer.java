@@ -23,9 +23,9 @@ public class DataInitializer {
             if (sectionRepository.count() == 0) {
                 moduleRepository.deleteAll();
 
-                Track officialTrack = trackRepository.save(
-                        new Track("Trilha Oficial", "Do zero à improvisação: domine o braço, a harmonia e as escalas necessárias para tocar de ouvido e compor.", null, true, true)
-                );
+                Track newOfficialTrack = new Track("Trilha Oficial", "Do zero à improvisação: domine o braço, a harmonia e as escalas necessárias para tocar de ouvido e compor.", null, true, true);
+                newOfficialTrack.setApproved(true);
+                Track officialTrack = trackRepository.save(newOfficialTrack);
 
                 Section sec01FundamentosBraco = new Section("Fundamentos do Braço", "Domine cada nota do braço, casa por casa.", 1);
                 Section sec02TeoriaEssencial = new Section("Teoria Musical Essencial", "A geometria da música: intervalos, escalas e tonalidades.", 2);
