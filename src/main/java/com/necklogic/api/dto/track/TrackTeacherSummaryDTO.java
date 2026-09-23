@@ -7,6 +7,7 @@ public record TrackTeacherSummaryDTO(
         String ownerName,
         boolean official,
         boolean published,
+        boolean approved,
         boolean paid,
         Integer priceCents,
         int enrolledCount,

@@ -41,6 +41,9 @@ public class Track {
     @Column(name = "price_cents")
     private Integer priceCents;
 
+    @Column(name = "is_approved", nullable = false)
+    private boolean approved = false;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
