@@ -1,16 +1,17 @@
 package com.necklogic.api.exception;
 
-import com.necklogic.api.dto.common.ErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
+import java.net.URI;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,62 +19,36 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponseDTO> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
+    public ResponseEntity<ProblemDetail> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
         logger.warn("Authentication failed: {} - Path: {}", ex.getMessage(), request.getRequestURI());
-
-        ErrorResponseDTO error = new ErrorResponseDTO(
-                LocalDateTime.now(),
-                HttpStatus.UNAUTHORIZED.value(),
-                "Unauthorized",
-                "E-mail ou senha incorretos",
-                request.getRequestURI()
-        );
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        return problem(HttpStatus.UNAUTHORIZED, "E-mail ou senha incorretos", request);
     }
 
     @ExceptionHandler(ForbiddenActionException.class)
-    public ResponseEntity<ErrorResponseDTO> handleForbiddenAction(ForbiddenActionException ex, HttpServletRequest request) {
+    public ResponseEntity<ProblemDetail> handleForbiddenAction(ForbiddenActionException ex, HttpServletRequest request) {
         logger.warn("Forbidden action: {} - Path: {}", ex.getMessage(), request.getRequestURI());
-
-        ErrorResponseDTO error = new ErrorResponseDTO(
-                LocalDateTime.now(),
-                HttpStatus.FORBIDDEN.value(),
-                "Forbidden",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        return problem(HttpStatus.FORBIDDEN, ex.getMessage(), request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ProblemDetail> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         logger.warn("Resource not found: {} - Path: {}", ex.getMessage(), request.getRequestURI());
-
-        ErrorResponseDTO error = new ErrorResponseDTO(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "Not Found",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return problem(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex, HttpServletRequest request) {
+    public ResponseEntity<ProblemDetail> handleGenericException(Exception ex, HttpServletRequest request) {
         logger.error("Internal Server Error: {} - Path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        return problem(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request);
+    }
 
-        ErrorResponseDTO error = new ErrorResponseDTO(
-                LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                "An unexpected error occurred",
-                request.getRequestURI()
-        );
+    private ResponseEntity<ProblemDetail> problem(HttpStatus status, String detail, HttpServletRequest request) {
+        ProblemDetail body = ProblemDetail.forStatusAndDetail(status, detail);
+        body.setInstance(URI.create(request.getRequestURI()));
+        body.setProperty("message", detail);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        return ResponseEntity.status(status)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(body);
     }
 }

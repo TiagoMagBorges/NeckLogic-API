@@ -6,6 +6,8 @@ import com.necklogic.api.dto.section.CreateSectionRequestDTO;
 import com.necklogic.api.dto.section.SectionResponseDTO;
 import com.necklogic.api.dto.track.CreateTrackRequestDTO;
 import com.necklogic.api.dto.track.TrackResponseDTO;
+import com.necklogic.api.dto.track.TrackStatsDTO;
+import com.necklogic.api.dto.track.TrackTeacherSummaryDTO;
 import com.necklogic.api.dto.track.UpdateTrackRequestDTO;
 import com.necklogic.api.model.Section;
 import com.necklogic.api.model.User;
@@ -13,6 +15,7 @@ import com.necklogic.api.service.ModuleService;
 import com.necklogic.api.service.PaymentService;
 import com.necklogic.api.service.SectionService;
 import com.necklogic.api.service.TrackService;
+import com.necklogic.api.service.TrackStatsService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,12 +31,15 @@ public class TrackController {
     private final ModuleService moduleService;
     private final SectionService sectionService;
     private final PaymentService paymentService;
+    private final TrackStatsService trackStatsService;
 
-    public TrackController(TrackService trackService, ModuleService moduleService, SectionService sectionService, PaymentService paymentService) {
+    public TrackController(TrackService trackService, ModuleService moduleService, SectionService sectionService,
+                           PaymentService paymentService, TrackStatsService trackStatsService) {
         this.trackService = trackService;
         this.moduleService = moduleService;
         this.sectionService = sectionService;
         this.paymentService = paymentService;
+        this.trackStatsService = trackStatsService;
     }
 
     @GetMapping
@@ -42,8 +48,13 @@ public class TrackController {
     }
 
     @GetMapping("/mine")
-    public ResponseEntity<List<TrackResponseDTO>> listMine(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(trackService.listOwnedBy(user));
+    public ResponseEntity<List<TrackTeacherSummaryDTO>> listMine(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(trackStatsService.summarize(trackService.listOwnedByEntities(user)));
+    }
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<TrackStatsDTO> getStats(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(trackStatsService.getStats(id, user));
     }
 
     @PostMapping

@@ -29,13 +29,15 @@ public class SecurityConfigurations {
 
     private final SecurityFilter securityFilter;
     private final AuthRateLimitFilter authRateLimitFilter;
+    private final UnauthorizedEntryPoint unauthorizedEntryPoint;
 
     @Value("${app.cors.allowed-origins}")
     private List<String> allowedOrigins;
 
-    public SecurityConfigurations(SecurityFilter securityFilter, AuthRateLimitFilter authRateLimitFilter) {
+    public SecurityConfigurations(SecurityFilter securityFilter, AuthRateLimitFilter authRateLimitFilter, UnauthorizedEntryPoint unauthorizedEntryPoint) {
         this.securityFilter = securityFilter;
         this.authRateLimitFilter = authRateLimitFilter;
+        this.unauthorizedEntryPoint = unauthorizedEntryPoint;
     }
 
     @Bean
@@ -44,6 +46,7 @@ public class SecurityConfigurations {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(unauthorizedEntryPoint))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()

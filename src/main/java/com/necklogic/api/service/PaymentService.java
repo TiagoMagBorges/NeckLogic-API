@@ -43,8 +43,6 @@ public class PaymentService {
         Integer amountCents = track.getPriceCents() != null ? track.getPriceCents() : 0;
 
         TrackPurchase purchase = new TrackPurchase(user, track, amountCents, paymentGateway.getName(), null);
-        purchase = purchaseRepository.save(purchase);
-
         CheckoutSession session = paymentGateway.createCheckoutSession(purchase);
         purchase.setSessionId(session.sessionId());
         purchase = purchaseRepository.save(purchase);
