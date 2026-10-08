@@ -10,6 +10,7 @@ import com.necklogic.api.model.Section;
 import com.necklogic.api.model.Track;
 import com.necklogic.api.model.User;
 import com.necklogic.api.model.UserTrackEnrollment;
+import com.necklogic.api.model.enums.ModuleStatus;
 import com.necklogic.api.repository.SectionRepository;
 import com.necklogic.api.repository.TrackRepository;
 import com.necklogic.api.repository.UserProgressRepository;
@@ -65,7 +66,7 @@ public class TrackService {
                 .toList();
     }
 
-    public List<TrackResponseDTO> listOwnedBy(User user) {
+    public List<Track> listOwnedByEntities(User user) {
         List<Track> owned = new ArrayList<>(trackRepository.findByOwner(user));
 
         if (user.isAdmin()) {
@@ -76,8 +77,7 @@ public class TrackService {
             });
         }
 
-        Set<Long> enrolledTrackIds = enrolledTrackIds(user);
-        return owned.stream().map(track -> toDTO(track, enrolledTrackIds.contains(track.getId()))).toList();
+        return owned;
     }
 
     private Set<Long> enrolledTrackIds(User user) {
@@ -124,9 +124,8 @@ public class TrackService {
         }
 
         List<Section> sections = sectionRepository.findByTrack(track);
-        List<Module> modules = sections.stream().flatMap(section -> section.getModules().stream()).toList();
 
-        progressRepository.deleteByModuleIn(modules);
+        progressRepository.deleteByModuleIn(modulesOf(track));
         enrollmentRepository.deleteByTrack(track);
         sectionRepository.deleteAll(sections);
         trackRepository.delete(track);
@@ -154,6 +153,22 @@ public class TrackService {
     private UserTrackEnrollment doEnroll(User user, Track track) {
         return enrollmentRepository.findByUserAndTrack(user, track)
                 .orElseGet(() -> enrollmentRepository.save(new UserTrackEnrollment(user, track)));
+    }
+
+    public double completionPercentageFor(User user, Track track) {
+        List<Long> moduleIds = modulesOf(track).stream().map(Module::getId).toList();
+        if (moduleIds.isEmpty()) {
+            return 0.0;
+        }
+
+        long completedCount = progressRepository.countByUserAndModule_IdInAndStatus(user, moduleIds, ModuleStatus.COMPLETED);
+        return (completedCount * 100.0) / moduleIds.size();
+    }
+
+    private List<Module> modulesOf(Track track) {
+        return sectionRepository.findByTrack(track).stream()
+                .flatMap(section -> section.getModules().stream())
+                .toList();
     }
 
     private TrackResponseDTO toDTO(Track track, boolean enrolled) {
